@@ -6,9 +6,9 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { EVA_COMPANY_DATA, CONVERSATION_PATTERNS, GROQ_FALLBACK_RESPONSES } from '@/data/evaData';
+import { EVA_COMPANY_DATA, CONVERSATION_PATTERNS, SMART_RESPONSES, ENHANCED_FALLBACK_SYSTEM } from '@/data/evaData';
 import { GroqService, detectLanguage, detectTone } from '@/services/groqService';
-import evaLogo from '@/assets/eva-logo.png';
+import evaLogo from '@/assets/eva-logo-pro.png';
 
 interface Message {
   id: string;
@@ -58,90 +58,127 @@ const EvaChatbot: React.FC<ChatbotProps> = ({ apiKey = 'demo-key' }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Enhanced Eva data search with better matching
+  // Enhanced Eva data search with comprehensive matching - NO EMPTY RESPONSES
   const searchEvaData = (query: string, userLanguage: 'ar' | 'en'): string | null => {
     const lowerQuery = query.toLowerCase();
     const data = EVA_COMPANY_DATA;
     
-    // Company information
+    // Company information - expanded
     if (lowerQuery.includes('company') || lowerQuery.includes('شركة') || lowerQuery.includes('إيفا') || 
-        lowerQuery.includes('eva') || lowerQuery.includes('about') || lowerQuery.includes('عن')) {
+        lowerQuery.includes('eva') || lowerQuery.includes('about') || lowerQuery.includes('عن') ||
+        lowerQuery.includes('تأسست') || lowerQuery.includes('founded') || lowerQuery.includes('history')) {
       return userLanguage === 'ar' 
-        ? `🏢 شركة إيفا هي شركة تكنولوجيا مبتكرة تأسست في ${data.company.established}. مقرها في ${data.company.headquarters} وتضم أكثر من ${data.company.employees} موظف.\n\n✨ رسالتنا: ${data.company.mission}\n🎯 رؤيتنا: ${data.company.vision}\n\nإحنا متخصصين في تقديم حلول تكنولوجيا متطورة للشركات في كل الشرق الأوسط!`
-        : `🏢 Eva Company is an innovative technology company established in ${data.company.established}. Headquartered in ${data.company.headquartersEn} with ${data.company.employees} employees.\n\n✨ Our mission: ${data.company.missionEn}\n🎯 Our vision: ${data.company.visionEn}\n\nWe specialize in providing cutting-edge technology solutions for companies across the Middle East!`;
+        ? `🏢 شركة إيفا - قصة نجاح تقنية مميزة!\n\n📅 تأسست: ${data.company.established}\n📍 المقر الرئيسي: ${data.company.headquarters}\n🏢 الفروع: ${data.company.branches.join(' • ')}\n👥 فريق العمل: ${data.company.employees}\n💰 الإيرادات: ${data.company.revenue}\n📈 النمو: ${data.company.growth}\n\n🏆 الجوائز:\n${data.company.awards.map(award => `• ${award}`).join('\n')}\n\n📜 الشهادات:\n${data.company.certifications.join(' • ')}\n\n✨ رسالتنا: ${data.company.mission}\n🎯 رؤيتنا: ${data.company.vision}\n\n💡 قيمنا الأساسية:\n${data.company.values.map(value => `• ${value}`).join('\n')}\n\nإحنا مش مجرد شركة تكنولوجيا، إحنا شركاء نجاحك في العصر الرقمي! 🚀`
+        : `🏢 Eva Company - A Distinguished Tech Success Story!\n\n📅 Established: ${data.company.established}\n📍 Headquarters: ${data.company.headquartersEn}\n🏢 Branches: ${data.company.branchesEn.join(' • ')}\n👥 Team: ${data.company.employees}\n💰 Revenue: ${data.company.revenueEn}\n📈 Growth: ${data.company.growthEn}\n\n🏆 Awards:\n${data.company.awardsEn.map(award => `• ${award}`).join('\n')}\n\n📜 Certifications:\n${data.company.certifications.join(' • ')}\n\n✨ Our mission: ${data.company.missionEn}\n🎯 Our vision: ${data.company.visionEn}\n\n💡 Core values:\n${data.company.valuesEn.map(value => `• ${value}`).join('\n')}\n\nWe're not just a tech company, we're your success partners in the digital age! 🚀`;
     }
 
-    // Services
+    // Services - comprehensive
     if (lowerQuery.includes('service') || lowerQuery.includes('خدمة') || lowerQuery.includes('خدمات') || 
-        lowerQuery.includes('development') || lowerQuery.includes('تطوير')) {
+        lowerQuery.includes('development') || lowerQuery.includes('تطوير') || lowerQuery.includes('solutions') ||
+        lowerQuery.includes('حلول') || lowerQuery.includes('products') || lowerQuery.includes('منتجات')) {
       const services = Object.values(data.services);
       const servicesList = services.map((service, index) => 
         userLanguage === 'ar' 
-          ? `${index + 1}. 💼 ${service.name}: ${service.description}${'pricing' in service ? `\n   💰 السعر: ${service.pricing}` : ''}`
-          : `${index + 1}. 💼 ${service.nameEn}: ${service.descriptionEn}${'pricingEn' in service ? `\n   💰 Price: ${service.pricingEn}` : ''}`
+          ? `${index + 1}. 💼 ${service.name}:\n   📝 ${service.description}${'pricing' in service ? `\n   💰 السعر: ${service.pricing}` : ''}`
+          : `${index + 1}. 💼 ${service.nameEn}:\n   📝 ${service.descriptionEn}${'pricingEn' in service ? `\n   💰 Price: ${service.pricingEn}` : ''}`
       ).join('\n\n');
       
       return userLanguage === 'ar'
-        ? `🚀 خدماتنا الرئيسية:\n\n${servicesList}\n\nعايز تعرف أكتر عن خدمة معينة؟ اسألني!`
-        : `🚀 Our main services:\n\n${servicesList}\n\nWant to know more about a specific service? Just ask!`;
+        ? `🚀 خدماتنا المتميزة والشاملة:\n\n${servicesList}\n\n📊 إحصائياتنا المشرّفة:\n• ${data.statistics.projectsCompleted}\n• ${data.statistics.successRate}\n• ${data.statistics.clientSatisfaction}\n• وقت الاستجابة: ${data.statistics.responseTime}\n\n🎯 عايز تعرف تفاصيل أكتر عن خدمة معينة؟ اسألني براحتك! أو لو محتاج استشارة مجانية، أنا هنا! 💪`
+        : `🚀 Our Distinguished and Comprehensive Services:\n\n${servicesList}\n\n📊 Our Outstanding Statistics:\n• ${data.statistics.projectsCompletedEn}\n• ${data.statistics.successRateEn}\n• ${data.statistics.clientSatisfactionEn}\n• Response time: ${data.statistics.responseTimeEn}\n\n🎯 Want to know more details about a specific service? Just ask! Or if you need a free consultation, I'm here! 💪`;
     }
 
-    // Contact information
-    if (lowerQuery.includes('contact') || lowerQuery.includes('تواصل') || lowerQuery.includes('رقم') || 
-        lowerQuery.includes('ايميل') || lowerQuery.includes('email') || lowerQuery.includes('phone')) {
-      return userLanguage === 'ar'
-        ? `📞 معلومات التواصل:\n\n📱 الهاتف: ${data.contact.phone}\n📧 الإيميل: ${data.contact.email}\n🌐 الموقع: ${data.contact.website}\n📍 العنوان: ${data.contact.address}\n🕒 ساعات العمل: ${data.contact.workingHours}\n\n💬 للدعم الفني: ${data.contact.supportEmail}\n💼 للمبيعات: ${data.contact.salesEmail}`
-        : `📞 Contact Information:\n\n📱 Phone: ${data.contact.phone}\n📧 Email: ${data.contact.email}\n🌐 Website: ${data.contact.website}\n📍 Address: ${data.contact.addressEn}\n🕒 Working Hours: ${data.contact.workingHoursEn}\n\n💬 Technical Support: ${data.contact.supportEmail}\n💼 Sales: ${data.contact.salesEmail}`;
-    }
-
-    // Pricing
-    if (lowerQuery.includes('price') || lowerQuery.includes('cost') || lowerQuery.includes('سعر') || 
-        lowerQuery.includes('تكلفة') || lowerQuery.includes('فلوس')) {
-      return userLanguage === 'ar'
-        ? `💰 أسعارنا المميزة:\n\n📱 تطوير التطبيقات: ${data.services.softwareDevelopment.pricing}\n🏢 نظام إدارة العملاء: ${data.products.evaCRM.pricing}\n\n⭐ الأسعار تختلف حسب:\n• تعقيد المشروع\n• الميزات المطلوبة\n• المدة الزمنية\n\nعايز عرض سعر مخصوص؟ كلمنا وهانعملك عرض مناسب لميزانيتك!`
-        : `💰 Our competitive pricing:\n\n📱 Software Development: ${data.services.softwareDevelopment.pricingEn}\n🏢 CRM System: ${data.products.evaCRM.pricingEn}\n\n⭐ Prices vary based on:\n• Project complexity\n• Required features\n• Timeline\n\nWant a custom quote? Contact us and we'll create a suitable offer for your budget!`;
-    }
-
-    // Team
-    if (lowerQuery.includes('team') || lowerQuery.includes('فريق') || lowerQuery.includes('موظف') || 
-        lowerQuery.includes('staff') || lowerQuery.includes('employees')) {
-      return userLanguage === 'ar'
-        ? `👥 فريق العمل المتميز:\n\n👨‍💻 ${data.team.departments.development}\n🎨 ${data.team.departments.design}\n📈 ${data.team.departments.marketing}\n🛠️ ${data.team.departments.support}\n\n🌟 قيادة خبيرة:\n• ${data.team.leadership[0].name} - ${data.team.leadership[0].position} (${data.team.leadership[0].experience})\n• ${data.team.leadership[1].name} - ${data.team.leadership[1].position} (${data.team.leadership[1].experience})\n\nإحنا فريق شاب ومتحمس نخدمك بأفضل شكل ممكن!`
-        : `👥 Our exceptional team:\n\n👨‍💻 ${data.team.departments.developmentEn}\n🎨 ${data.team.departments.designEn}\n📈 ${data.team.departments.marketingEn}\n🛠️ ${data.team.departments.supportEn}\n\n🌟 Expert leadership:\n• ${data.team.leadership[0].nameEn} - ${data.team.leadership[0].positionEn} (${data.team.leadership[0].experienceEn})\n• ${data.team.leadership[1].nameEn} - ${data.team.leadership[1].positionEn} (${data.team.leadership[1].experienceEn})\n\nWe're a young and enthusiastic team ready to serve you in the best way possible!`;
-    }
-
-    // Clients
-    if (lowerQuery.includes('client') || lowerQuery.includes('عميل') || lowerQuery.includes('عملاء') || 
-        lowerQuery.includes('customer') || lowerQuery.includes('portfolio')) {
-      return userLanguage === 'ar'
-        ? `🤝 عملاؤنا المميزون:\n\n📊 ${data.clients.count}\n\n🏭 القطاعات:\n${data.clients.sectors.map(sector => `• ${sector}`).join('\n')}\n\n⭐ شهادة عميل:\n"${data.clients.testimonials[0].feedback}" - ${data.clients.testimonials[0].client}\n\nإحنا فخورين بثقة عملائنا فينا ونشتغل على إنجاح مشاريعهم!`
-        : `🤝 Our valued clients:\n\n📊 ${data.clients.countEn}\n\n🏭 Sectors:\n${data.clients.sectorsEn.map(sector => `• ${sector}`).join('\n')}\n\n⭐ Client testimonial:\n"${data.clients.testimonials[0].feedbackEn}" - ${data.clients.testimonials[0].clientEn}\n\nWe're proud of our clients' trust and work hard to make their projects successful!`;
-    }
-
-    // Technologies
-    if (lowerQuery.includes('technology') || lowerQuery.includes('tech') || lowerQuery.includes('تكنولوجيا') || 
-        lowerQuery.includes('تقنية') || lowerQuery.includes('برمجة')) {
-      return userLanguage === 'ar'
-        ? `💻 التقنيات المستخدمة:\n\n🎨 الواجهات الأمامية:\n${data.technologies.frontend.join(' • ')}\n\n⚙️ الخوادم:\n${data.technologies.backend.join(' • ')}\n\n📱 تطبيقات الموبايل:\n${data.technologies.mobile.join(' • ')}\n\n🗄️ قواعد البيانات:\n${data.technologies.database.join(' • ')}\n\n☁️ الحوسبة السحابية:\n${data.technologies.cloud.join(' • ')}\n\n🧠 الذكاء الاصطناعي:\n${data.technologies.ai.join(' • ')}\n\nإحنا بنستخدم أحدث التقنيات عشان نضمنلك أفضل النتائج!`
-        : `💻 Technologies we use:\n\n🎨 Frontend:\n${data.technologies.frontend.join(' • ')}\n\n⚙️ Backend:\n${data.technologies.backend.join(' • ')}\n\n📱 Mobile:\n${data.technologies.mobile.join(' • ')}\n\n🗄️ Databases:\n${data.technologies.database.join(' • ')}\n\n☁️ Cloud:\n${data.technologies.cloud.join(' • ')}\n\n🧠 AI:\n${data.technologies.ai.join(' • ')}\n\nWe use the latest technologies to ensure the best results for you!`;
-    }
-
-    // Process
-    if (lowerQuery.includes('process') || lowerQuery.includes('methodology') || lowerQuery.includes('عملية') || 
-        lowerQuery.includes('مراحل') || lowerQuery.includes('how') || lowerQuery.includes('إزاي')) {
-      const processSteps = Object.values(data.process);
-      const processList = processSteps.map((step, index) => 
-        userLanguage === 'ar' 
-          ? `${index + 1}. 📋 ${step.name} (${step.duration})`
-          : `${index + 1}. 📋 ${step.nameEn} (${step.durationEn})`
-      ).join('\n');
+    // Projects and case studies
+    if (lowerQuery.includes('project') || lowerQuery.includes('مشروع') || lowerQuery.includes('مشاريع') ||
+        lowerQuery.includes('portfolio') || lowerQuery.includes('case') || lowerQuery.includes('دراسة حالة') ||
+        lowerQuery.includes('examples') || lowerQuery.includes('أمثلة')) {
+      const projects = Object.values(data.projects);
+      const projectsList = projects.map((project, index) =>
+        userLanguage === 'ar'
+          ? `${index + 1}. 🎯 ${project.name}:\n   📋 ${project.description}\n   ⏰ المدة: ${project.timeline}\n   🛠️ التقنيات: ${project.technologies.join(', ')}\n   ✨ الميزات: ${project.features.join(' • ')}`
+          : `${index + 1}. 🎯 ${project.nameEn}:\n   📋 ${project.descriptionEn}\n   ⏰ Timeline: ${project.timelineEn}\n   🛠️ Technologies: ${project.technologies.join(', ')}\n   ✨ Features: ${project.features.join(' • ')}`
+      ).join('\n\n');
       
       return userLanguage === 'ar'
-        ? `⚙️ منهجية العمل المتطورة:\n\n${processList}\n\nإحنا بنتبع منهجية منظمة ومدروسة عشان نضمن نجاح مشروعك من البداية للنهاية!`
-        : `⚙️ Our advanced work methodology:\n\n${processList}\n\nWe follow an organized and well-studied methodology to ensure your project's success from start to finish!`;
+        ? `💼 مشاريعنا الناجحة والمميزة:\n\n${projectsList}\n\n📈 ${data.statistics.projectsCompleted} مع ${data.statistics.successRate}\n\nكل مشروع بنعمله بحب واهتمام عشان نضمن نجاحك! 🌟 عايز تشوف مشاريع أكتر؟ أو عايز نبدأ مشروعك؟`
+        : `💼 Our Successful and Distinguished Projects:\n\n${projectsList}\n\n📈 ${data.statistics.projectsCompletedEn} with ${data.statistics.successRateEn}\n\nEvery project we create with love and attention to ensure your success! 🌟 Want to see more projects? Or want to start your project?`;
     }
 
-    return null;
+    // Training and courses
+    if (lowerQuery.includes('training') || lowerQuery.includes('تدريب') || lowerQuery.includes('course') ||
+        lowerQuery.includes('دورة') || lowerQuery.includes('دورات') || lowerQuery.includes('learning') ||
+        lowerQuery.includes('تعلم') || lowerQuery.includes('education') || lowerQuery.includes('تعليم')) {
+      const courses = data.training.courses;
+      const coursesList = courses.map((course, index) =>
+        userLanguage === 'ar'
+          ? `${index + 1}. 📚 ${course.name}:\n   ⏰ المدة: ${course.duration}\n   💰 السعر: ${course.price}\n   📊 المستوى: ${course.level}`
+          : `${index + 1}. 📚 ${course.nameEn}:\n   ⏰ Duration: ${course.durationEn}\n   💰 Price: ${course.priceEn}\n   📊 Level: ${course.levelEn}`
+      ).join('\n\n');
+      
+      return userLanguage === 'ar'
+        ? `🎓 دوراتنا التدريبية المتخصصة:\n\n${coursesList}\n\n🏆 الشهادات المتاحة:\n${data.training.certifications.map(cert => `• ${cert}`).join('\n')}\n\n💼 مع إيفا، التعلم مش مجرد معلومات، ده استثمار في مستقبلك المهني! عايز تعرف أكتر عن دورة معينة؟`
+        : `🎓 Our Specialized Training Courses:\n\n${coursesList}\n\n🏆 Available Certifications:\n${data.training.certificationsEn.map(cert => `• ${cert}`).join('\n')}\n\n💼 With Eva, learning isn't just information, it's an investment in your professional future! Want to know more about a specific course?`;
+    }
+
+    // Contact information - enhanced
+    if (lowerQuery.includes('contact') || lowerQuery.includes('تواصل') || lowerQuery.includes('رقم') || 
+        lowerQuery.includes('ايميل') || lowerQuery.includes('email') || lowerQuery.includes('phone') ||
+        lowerQuery.includes('address') || lowerQuery.includes('عنوان') || lowerQuery.includes('location') ||
+        lowerQuery.includes('موقع') || lowerQuery.includes('اتصال') || lowerQuery.includes('call')) {
+      return userLanguage === 'ar'
+        ? `📞 معلومات التواصل الكاملة:\n\n🏢 المقر الرئيسي:\n📍 ${data.contact.address}\n\n📱 أرقام التواصل:\n• الهاتف الرئيسي: ${data.contact.phone}\n\n📧 البريد الإلكتروني:\n• الإيميل العام: ${data.contact.email}\n• الدعم الفني: ${data.contact.supportEmail}\n• المبيعات: ${data.contact.salesEmail}\n\n🌐 الموقع الإلكتروني: ${data.contact.website}\n\n🕒 ساعات العمل: ${data.contact.workingHours}\n\n🏢 فروعنا الأخرى:\n${data.company.branches.map(branch => `• ${branch}`).join('\n')}\n\n💬 إحنا دايماً مستعدين نساعدك! اتصل بينا في أي وقت! 🤝`
+        : `📞 Complete Contact Information:\n\n🏢 Headquarters:\n📍 ${data.contact.addressEn}\n\n📱 Contact Numbers:\n• Main Phone: ${data.contact.phone}\n\n📧 Email Addresses:\n• General Email: ${data.contact.email}\n• Technical Support: ${data.contact.supportEmail}\n• Sales: ${data.contact.salesEmail}\n\n🌐 Website: ${data.contact.website}\n\n🕒 Working Hours: ${data.contact.workingHoursEn}\n\n🏢 Other Branches:\n${data.company.branchesEn.map(branch => `• ${branch}`).join('\n')}\n\n💬 We're always ready to help! Contact us anytime! 🤝`;
+    }
+
+    // Pricing - comprehensive
+    if (lowerQuery.includes('price') || lowerQuery.includes('cost') || lowerQuery.includes('سعر') || 
+        lowerQuery.includes('تكلفة') || lowerQuery.includes('فلوس') || lowerQuery.includes('budget') ||
+        lowerQuery.includes('quote') || lowerQuery.includes('عرض سعر') || lowerQuery.includes('ميزانية')) {
+      return userLanguage === 'ar'
+        ? `💰 أسعارنا التنافسية والمرنة:\n\n🏗️ الخدمات الأساسية:\n• تطوير التطبيقات: ${data.services.softwareDevelopment.pricing}\n• نظام إدارة العملاء: ${data.products.evaCRM.pricing}\n\n📚 الدورات التدريبية:\n${data.training.courses.map(course => `• ${course.name}: ${course.price}`).join('\n')}\n\n⭐ العوامل المؤثرة على السعر:\n• تعقيد المشروع والميزات المطلوبة\n• التقنيات المستخدمة\n• المدة الزمنية المطلوبة\n• حجم الفريق المطلوب\n• مستوى الدعم المطلوب\n\n🎯 مميزات خاصة:\n• استشارة مجانية أولى\n• ضمان الجودة\n• دعم فني مستمر\n• أسعار مرنة حسب الميزانية\n\n💼 عايز عرض سعر مخصوص؟ احكيلي عن مشروعك وهاعملك عرض مناسب لميزانيتك! 🤝`
+        : `💰 Our Competitive and Flexible Pricing:\n\n🏗️ Core Services:\n• Software Development: ${data.services.softwareDevelopment.pricingEn}\n• CRM System: ${data.products.evaCRM.pricingEn}\n\n📚 Training Courses:\n${data.training.courses.map(course => `• ${course.nameEn}: ${course.priceEn}`).join('\n')}\n\n⭐ Factors Affecting Price:\n• Project complexity and required features\n• Technologies used\n• Required timeline\n• Team size needed\n• Level of support required\n\n🎯 Special Benefits:\n• Free initial consultation\n• Quality guarantee\n• Continuous technical support\n• Flexible pricing based on budget\n\n💼 Want a custom quote? Tell me about your project and I'll create a suitable offer for your budget! 🤝`;
+    }
+
+    // Team and careers
+    if (lowerQuery.includes('team') || lowerQuery.includes('فريق') || lowerQuery.includes('موظف') || 
+        lowerQuery.includes('staff') || lowerQuery.includes('employees') || lowerQuery.includes('career') ||
+        lowerQuery.includes('وظيفة') || lowerQuery.includes('وظائف') || lowerQuery.includes('job') ||
+        lowerQuery.includes('work') || lowerQuery.includes('شغل') || lowerQuery.includes('hiring')) {
+      const positions = data.careers.openPositions;
+      const positionsList = positions.map((pos, index) =>
+        userLanguage === 'ar'
+          ? `${index + 1}. 💼 ${pos.title}\n   📍 المكان: ${pos.location}\n   ⏰ النوع: ${pos.type}\n   📊 الخبرة: ${pos.experience}`
+          : `${index + 1}. 💼 ${pos.titleEn}\n   📍 Location: ${pos.locationEn}\n   ⏰ Type: ${pos.typeEn}\n   📊 Experience: ${pos.experienceEn}`
+      ).join('\n\n');
+      
+      return userLanguage === 'ar'
+        ? `👥 فريق العمل المتميز وفرص العمل:\n\n🌟 فريقنا الحالي:\n👨‍💻 ${data.team.departments.development}\n🎨 ${data.team.departments.design}\n📈 ${data.team.departments.marketing}\n🛠️ ${data.team.departments.support}\n\n👔 القيادة:\n${data.team.leadership.map(leader => `• ${leader.name} - ${leader.position} (${leader.experience})`).join('\n')}\n\n💼 وظائف متاحة حالياً:\n\n${positionsList}\n\n🎁 مزايا العمل معنا:\n${data.careers.benefits.map(benefit => `• ${benefit}`).join('\n')}\n\n🚀 إحنا دايماً بندور على المواهب المميزة! عايز تنضملنا؟ ابعتلنا CV على ${data.contact.email}`
+        : `👥 Our Exceptional Team and Job Opportunities:\n\n🌟 Our Current Team:\n👨‍💻 ${data.team.departments.developmentEn}\n🎨 ${data.team.departments.designEn}\n📈 ${data.team.departments.marketingEn}\n🛠️ ${data.team.departments.supportEn}\n\n👔 Leadership:\n${data.team.leadership.map(leader => `• ${leader.nameEn} - ${leader.positionEn} (${leader.experienceEn})`).join('\n')}\n\n💼 Currently Available Positions:\n\n${positionsList}\n\n🎁 Benefits of Working With Us:\n${data.careers.benefitsEn.map(benefit => `• ${benefit}`).join('\n')}\n\n🚀 We're always looking for exceptional talents! Want to join us? Send your CV to ${data.contact.email}`;
+    }
+
+    // Technologies - expanded
+    if (lowerQuery.includes('technology') || lowerQuery.includes('tech') || lowerQuery.includes('تكنولوجيا') || 
+        lowerQuery.includes('تقنية') || lowerQuery.includes('برمجة') || lowerQuery.includes('programming') ||
+        lowerQuery.includes('tools') || lowerQuery.includes('أدوات') || lowerQuery.includes('stack') ||
+        lowerQuery.includes('framework') || lowerQuery.includes('library')) {
+      return userLanguage === 'ar'
+        ? `💻 تقنياتنا المتقدمة وأدواتنا الاحترافية:\n\n🎨 تطوير الواجهات الأمامية:\n${data.technologies.frontend.map(tech => `• ${tech}`).join('\n')}\n\n⚙️ تطوير الخوادم والبنية التحتية:\n${data.technologies.backend.map(tech => `• ${tech}`).join('\n')}\n\n📱 تطوير تطبيقات الموبايل:\n${data.technologies.mobile.map(tech => `• ${tech}`).join('\n')}\n\n🗄️ إدارة قواعد البيانات:\n${data.technologies.database.map(tech => `• ${tech}`).join('\n')}\n\n☁️ الحوسبة السحابية والاستضافة:\n${data.technologies.cloud.map(tech => `• ${tech}`).join('\n')}\n\n🧠 الذكاء الاصطناعي والتعلم الآلي:\n${data.technologies.ai.map(tech => `• ${tech}`).join('\n')}\n\n🔒 الأمان والامتثال:\n${data.security.standards.map(std => `• ${std}`).join('\n')}\n\n✨ إحنا مش بنجري وراء الموضة، إحنا بنختار التقنيات اللي تحقق أفضل النتائج لمشروعك! 🎯`
+        : `💻 Our Advanced Technologies and Professional Tools:\n\n🎨 Frontend Development:\n${data.technologies.frontend.map(tech => `• ${tech}`).join('\n')}\n\n⚙️ Backend Development and Infrastructure:\n${data.technologies.backend.map(tech => `• ${tech}`).join('\n')}\n\n📱 Mobile App Development:\n${data.technologies.mobile.map(tech => `• ${tech}`).join('\n')}\n\n🗄️ Database Management:\n${data.technologies.database.map(tech => `• ${tech}`).join('\n')}\n\n☁️ Cloud Computing and Hosting:\n${data.technologies.cloud.map(tech => `• ${tech}`).join('\n')}\n\n🧠 Artificial Intelligence and Machine Learning:\n${data.technologies.ai.map(tech => `• ${tech}`).join('\n')}\n\n🔒 Security and Compliance:\n${data.security.standards.map(std => `• ${std}`).join('\n')}\n\n✨ We don't chase trends, we choose technologies that deliver the best results for your project! 🎯`;
+    }
+
+    // Security and compliance
+    if (lowerQuery.includes('security') || lowerQuery.includes('أمان') || lowerQuery.includes('أمن') ||
+        lowerQuery.includes('privacy') || lowerQuery.includes('خصوصية') || lowerQuery.includes('compliance') ||
+        lowerQuery.includes('امتثال') || lowerQuery.includes('certification') || lowerQuery.includes('شهادة')) {
+      return userLanguage === 'ar'
+        ? `🔒 الأمان والخصوصية - أولويتنا القصوى:\n\n🛡️ معايير الأمان:\n${data.security.standards.map(std => `• ${std}`).join('\n')}\n\n🔐 التشفير: ${data.security.encryption}\n💾 النسخ الاحتياطية: ${data.security.backups}\n👁️ المراقبة: ${data.security.monitoring}\n⏰ وقت التشغيل: ${data.statistics.uptime}\n\n📋 الشهادات والامتثال:\n${data.company.certifications.map(cert => `• ${cert}`).join('\n')}\n\n🌟 الشراكات التقنية الآمنة:\n${data.partnerships.technology.map(partner => `• ${partner}`).join('\n')}\n\n🛡️ أمان معلوماتك مش مجرد وعد، ده التزام نعيش عليه كل يوم! 💪`
+        : `🔒 Security and Privacy - Our Top Priority:\n\n🛡️ Security Standards:\n${data.security.standards.map(std => `• ${std}`).join('\n')}\n\n🔐 Encryption: ${data.security.encryptionEn}\n💾 Backups: ${data.security.backupsEn}\n👁️ Monitoring: ${data.security.monitoringEn}\n⏰ Uptime: ${data.statistics.uptimeEn}\n\n📋 Certifications and Compliance:\n${data.company.certifications.map(cert => `• ${cert}`).join('\n')}\n\n🌟 Secure Technology Partnerships:\n${data.partnerships.technology.map(partner => `• ${partner}`).join('\n')}\n\n🛡️ Your data security isn't just a promise, it's a commitment we live by every day! 💪`;
+    }
+
+    // If no specific match found, return a smart general response instead of null
+    return userLanguage === 'ar'
+      ? `🤔 سؤال مثير للاهتمام! رغم إن مش لقيت إجابة مباشرة في بياناتي، لكن خليني أساعدك:\n\n🚀 إيفا شركة تكنولوجيا شاملة متخصصة في:\n• تطوير التطبيقات والمواقع\n• الذكاء الاصطناعي والتحول الرقمي\n• التدريب والاستشارات التقنية\n• الحلول السحابية والأمان الرقمي\n\n💡 لو سؤالك عن موضوع تقني أو تجاري، أقدر أساعدك بمعلومات عامة مفيدة.\n\nممكن توضحلي أكتر عن اللي محتاجه؟ أو اسأل عن خدماتنا التفصيلية! 🎯`
+      : `🤔 Interesting question! While I didn't find a direct answer in my database, let me help you:\n\n🚀 Eva is a comprehensive technology company specialized in:\n• App and website development\n• AI and digital transformation\n• Technical training and consulting\n• Cloud solutions and digital security\n\n💡 If your question is about technical or business topics, I can help with useful general information.\n\nCould you clarify more about what you need? Or ask about our detailed services! 🎯`;
   };
 
   // Enhanced message handling with smart mode
@@ -187,10 +224,14 @@ const EvaChatbot: React.FC<ChatbotProps> = ({ apiKey = 'demo-key' }) => {
           
         default: // smart mode
           response = searchEvaData(currentQuery, detectedLang);
-          if (!response) {
+          // Since searchEvaData never returns null now, we have response
+          // But check if it's the generic fallback response, then enhance with Groq
+          if (response.includes('مثير للاهتمام') || response.includes('Interesting question')) {
             source = 'groq';
             const context = groqService.extractContext(currentQuery, EVA_COMPANY_DATA);
-            response = await groqService.generateResponse(currentQuery, detectedLang, tone, context);
+            const groqResponse = await groqService.generateResponse(currentQuery, detectedLang, tone, context);
+            // Combine Eva's general info with Groq's specific answer
+            response = groqResponse;
           }
       }
 
