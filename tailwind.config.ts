@@ -52,6 +52,32 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				// Eva Custom Colors
+				eva: {
+					primary: 'hsl(var(--eva-primary))',
+					'primary-light': 'hsl(var(--eva-primary-light))',
+					'primary-dark': 'hsl(var(--eva-primary-dark))',
+					secondary: 'hsl(var(--eva-secondary))',
+					'secondary-light': 'hsl(var(--eva-secondary-light))',
+					accent: 'hsl(var(--eva-accent))',
+					success: 'hsl(var(--eva-success))',
+					warning: 'hsl(var(--eva-warning))'
+				},
+				chat: {
+					bg: 'hsl(var(--chat-bg))',
+					surface: 'hsl(var(--chat-surface))',
+					card: 'hsl(var(--chat-card))',
+					border: 'hsl(var(--chat-border))',
+					user: 'hsl(var(--user-message))',
+					bot: 'hsl(var(--bot-message))',
+					system: 'hsl(var(--system-message))'
+				},
+				text: {
+					primary: 'hsl(var(--text-primary))',
+					secondary: 'hsl(var(--text-secondary))',
+					muted: 'hsl(var(--text-muted))',
+					accent: 'hsl(var(--text-accent))'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
