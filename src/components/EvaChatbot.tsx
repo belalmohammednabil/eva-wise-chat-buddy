@@ -62,6 +62,18 @@ const EvaChatbot: React.FC<ChatbotProps> = ({ apiKey = 'demo-key' }) => {
   const searchEvaData = (query: string, userLanguage: 'ar' | 'en'): string | null => {
     const lowerQuery = query.toLowerCase();
     const data = EVA_COMPANY_DATA;
+    const names = ['حبيبي', 'صديقي', 'بطل', 'محترم', 'استاذ'];
+
+    // Greetings - comprehensive
+    if (lowerQuery.includes('hello') || lowerQuery.includes('hi') || lowerQuery.includes('أهلا') ||
+        lowerQuery.includes('مرحبا') || lowerQuery.includes('السلام') || lowerQuery.includes('صباح') ||
+        lowerQuery.includes('مساء') || lowerQuery.includes('إزيك') || lowerQuery.includes('ازيك') ||
+        lowerQuery.includes('ازاي') || lowerQuery.includes('عامل') || lowerQuery.includes('اخبارك') ||
+        lowerQuery.includes('أزيك') || lowerQuery.includes('ايه أخبارك') || lowerQuery.includes('إيه أخبارك')) {
+      return userLanguage === 'ar'
+        ? `أهلاً وسهلاً! ${names[Math.floor(Math.random() * names.length)]} 🌟 أنا مساعد إيفا الذكي، هنا علشان أساعدك في كل اللي تحتاجه!\n\n🚀 أقدر أساعدك في:\n• معرفة خدماتنا ومنتجاتنا\n• معلومات عن الأسعار والعروض\n• تفاصيل المشاريع والتدريبات\n• التواصل مع الفريق\n\n💬 ممكن تسألني عن أي حاجة تخص إيفا أو أي استفسار تقني عام! إزاي أقدر أساعدك النهاردة؟ 😊`
+        : `Hello there! ${names[Math.floor(Math.random() * names.length)]} 🌟 I'm Eva's smart assistant, here to help you with everything you need!\n\n🚀 I can help you with:\n• Information about our services and products\n• Pricing and offers\n• Project and training details\n• Team contact information\n\n💬 Feel free to ask me anything about Eva or any general technical questions! How can I help you today? 😊`;
+    }
     
     // Company information - expanded
     if (lowerQuery.includes('company') || lowerQuery.includes('شركة') || lowerQuery.includes('إيفا') || 
@@ -247,11 +259,23 @@ const EvaChatbot: React.FC<ChatbotProps> = ({ apiKey = 'demo-key' }) => {
 
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
-      toast({
-        title: detectedLang === 'ar' ? 'خطأ' : 'Error',
-        description: detectedLang === 'ar' ? 'حدث خطأ في الإرسال' : 'Error sending message',
-        variant: 'destructive'
-      });
+      console.error('Error in handleSendMessage:', error);
+      // Provide a helpful response even if Groq fails
+      const fallbackResponse = detectedLang === 'ar'
+        ? `شكراً لسؤالك! ${searchEvaData(currentQuery, detectedLang)}\n\n🤖 نظام الذكاء الاصطناعي غير متاح حالياً، لكن معلومات إيفا المحدثة متوفرة دائماً!\n\n💼 لأي استفسارات إضافية، تقدر تتواصل معانا مباشرة!`
+        : `Thanks for your question! ${searchEvaData(currentQuery, detectedLang)}\n\n🤖 AI system is currently unavailable, but Eva's updated information is always available!\n\n💼 For additional inquiries, you can contact us directly!`;
+      
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: fallbackResponse,
+        isUser: false,
+        timestamp: new Date(),
+        language: detectedLang,
+        tone,
+        source: 'eva'
+      };
+
+      setMessages(prev => [...prev, botMessage]);
     } finally {
       setIsLoading(false);
     }
