@@ -6,9 +6,9 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { EVA_COMPANY_DATA, CONVERSATION_PATTERNS, SMART_RESPONSES, ENHANCED_FALLBACK_SYSTEM } from '@/data/evaData';
+import { EVA_COMPANY_DATA, CONVERSATION_DATABASE, CONVERSATION_PATTERNS } from '@/data/evaData';
 import { GroqService, detectLanguage, detectTone } from '@/services/groqService';
-import evaLogo from '@/assets/eva-logo-pro.png';
+import evaLogo from '@/assets/eva-logo-official.png';
 
 interface Message {
   id: string;
@@ -62,17 +62,37 @@ const EvaChatbot: React.FC<ChatbotProps> = ({ apiKey = 'demo-key' }) => {
   const searchEvaData = (query: string, userLanguage: 'ar' | 'en'): string | null => {
     const lowerQuery = query.toLowerCase();
     const data = EVA_COMPANY_DATA;
-    const names = ['حبيبي', 'صديقي', 'بطل', 'محترم', 'استاذ'];
+    
+    // First check the conversation database for exact or similar matches
+    const matchingConversations = CONVERSATION_DATABASE.conversations.filter(conv => {
+      const queryLower = conv.userQuery.toLowerCase();
+      return queryLower.includes(lowerQuery) || lowerQuery.includes(queryLower) ||
+             conv.userQuery.split(' ').some(word => lowerQuery.includes(word.toLowerCase()));
+    });
 
-    // Greetings - comprehensive
+    if (matchingConversations.length > 0) {
+      // Sort by language match and return the best match
+      const languageMatches = matchingConversations.filter(conv => conv.language === userLanguage);
+      if (languageMatches.length > 0) {
+        return languageMatches[0].botResponse;
+      }
+      return matchingConversations[0].botResponse;
+    }
+
+    const names = ['حبيبي', 'صديقي', 'بطل', 'محترم', 'استاذ', 'يا فندم'];
+    const englishNames = ['buddy', 'friend', 'dear', 'sir', 'mate'];
+
+    // Enhanced greetings detection
     if (lowerQuery.includes('hello') || lowerQuery.includes('hi') || lowerQuery.includes('أهلا') ||
         lowerQuery.includes('مرحبا') || lowerQuery.includes('السلام') || lowerQuery.includes('صباح') ||
         lowerQuery.includes('مساء') || lowerQuery.includes('إزيك') || lowerQuery.includes('ازيك') ||
         lowerQuery.includes('ازاي') || lowerQuery.includes('عامل') || lowerQuery.includes('اخبارك') ||
-        lowerQuery.includes('أزيك') || lowerQuery.includes('ايه أخبارك') || lowerQuery.includes('إيه أخبارك')) {
+        lowerQuery.includes('أزيك') || lowerQuery.includes('ايه أخبارك') || lowerQuery.includes('إيه أخبارك') ||
+        lowerQuery.includes('good morning') || lowerQuery.includes('good evening') || lowerQuery.includes('hey') ||
+        lowerQuery.includes('what\'s up') || lowerQuery.includes('whats up')) {
       return userLanguage === 'ar'
-        ? `أهلاً وسهلاً! ${names[Math.floor(Math.random() * names.length)]} 🌟 أنا مساعد إيفا الذكي، هنا علشان أساعدك في كل اللي تحتاجه!\n\n🚀 أقدر أساعدك في:\n• معرفة خدماتنا ومنتجاتنا\n• معلومات عن الأسعار والعروض\n• تفاصيل المشاريع والتدريبات\n• التواصل مع الفريق\n\n💬 ممكن تسألني عن أي حاجة تخص إيفا أو أي استفسار تقني عام! إزاي أقدر أساعدك النهاردة؟ 😊`
-        : `Hello there! ${names[Math.floor(Math.random() * names.length)]} 🌟 I'm Eva's smart assistant, here to help you with everything you need!\n\n🚀 I can help you with:\n• Information about our services and products\n• Pricing and offers\n• Project and training details\n• Team contact information\n\n💬 Feel free to ask me anything about Eva or any general technical questions! How can I help you today? 😊`;
+        ? `أهلاً وسهلاً! ${names[Math.floor(Math.random() * names.length)]} 🌟 أنا مساعد إيفا الذكي، هنا علشان أساعدك في كل اللي تحتاجه!\n\n🚀 أقدر أساعدك في:\n• معرفة خدماتنا ومنتجاتنا الكاملة\n• معلومات عن الأسعار والعروض الحالية\n• تفاصيل المشاريع والتدريبات المتاحة\n• التواصل مع الفريق والدعم الفني\n• نصائح للعناية والجمال\n• معلومات عن جودة وشهادات إيفا\n\n💬 ممكن تسألني عن أي حاجة تخص إيفا أو أي استفسار تقني عام! إزاي أقدر أساعدك النهاردة؟ 😊`
+        : `Hello there! ${englishNames[Math.floor(Math.random() * englishNames.length)]} 🌟 I'm Eva's intelligent assistant, here to help you with everything you need!\n\n🚀 I can assist you with:\n• Complete information about our services and products\n• Current pricing and promotional offers\n• Available projects and training details\n• Team contact and technical support\n• Beauty and care tips\n• Information about Eva's quality and certifications\n\n💬 Feel free to ask me anything about Eva or any general technical questions! How can I help you today? 😊`;
     }
     
     // Company information - expanded
@@ -260,10 +280,14 @@ const EvaChatbot: React.FC<ChatbotProps> = ({ apiKey = 'demo-key' }) => {
       setMessages(prev => [...prev, botMessage]);
     } catch (error) {
       console.error('Error in handleSendMessage:', error);
-      // Provide a helpful response even if Groq fails
+      // Provide intelligent response even if Groq fails
+      const evaResponse = searchEvaData(currentQuery, detectedLang);
+      const smartResponses = CONVERSATION_DATABASE.smartResponses[detectedLang];
+      const randomResponse = smartResponses.general[Math.floor(Math.random() * smartResponses.general.length)];
+      
       const fallbackResponse = detectedLang === 'ar'
-        ? `شكراً لسؤالك! ${searchEvaData(currentQuery, detectedLang)}\n\n🤖 نظام الذكاء الاصطناعي غير متاح حالياً، لكن معلومات إيفا المحدثة متوفرة دائماً!\n\n💼 لأي استفسارات إضافية، تقدر تتواصل معانا مباشرة!`
-        : `Thanks for your question! ${searchEvaData(currentQuery, detectedLang)}\n\n🤖 AI system is currently unavailable, but Eva's updated information is always available!\n\n💼 For additional inquiries, you can contact us directly!`;
+        ? evaResponse || `${randomResponse}\n\n🤖 ${CONVERSATION_DATABASE.fallbackSystem.ar.beforeAI}\n\nلكن معلومات إيفا الأساسية متوفرة دائماً:\n• خدمة العملاء: 17125\n• الإيميل: info@eva-cosmetics.com\n• المتجر: shop@eva-cosmetics.com\n\n💼 إيه اللي تحب تعرفه عن إيفا؟`
+        : evaResponse || `${randomResponse}\n\n🤖 ${CONVERSATION_DATABASE.fallbackSystem.en.beforeAI}\n\nBut Eva's essential information is always available:\n• Customer Service: 17125\n• Email: info@eva-cosmetics.com\n• Store: shop@eva-cosmetics.com\n\n💼 What would you like to know about Eva?`;
       
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),

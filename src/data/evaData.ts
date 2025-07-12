@@ -331,6 +331,23 @@ export const EVA_COMPANY_DATA = {
   }
 };
 
+// المحادثات المرجعية الشاملة
+export const CONVERSATION_DATABASE = {
+  conversations: [
+    { id: 1, userQuery: "ازيك؟", botResponse: "أنا زي الفل، يا صديقي! 😊 عايز نكلم عن إيفا كوزمتكس؟", category: "greeting", language: "ar", tone: "informal" },
+    { id: 2, userQuery: "من أسس إيفا؟", botResponse: "تأسست إيفا كوزمتكس بواسطة الدكتور منير رياض أرمانيوس، بناءً على إرث والده من 1917", category: "company", language: "ar", tone: "formal" },
+    { id: 3, userQuery: "إيه منتجات إيفا؟", botResponse: "إيفا عندهم تشكيلة واسعة: شامبو ألو إيفا، إيفا هير كلينك، منتجات Warimi، ومعجون E-Line", category: "products", language: "ar", tone: "informal" }
+  ],
+  smartResponses: {
+    ar: { general: ["إيفا دايماً في المقدمة! عايز تعرف إيه تحديداً؟ 😊"] },
+    en: { general: ["Eva's always leading! What would you like to know? 😊"] }
+  },
+  fallbackSystem: {
+    ar: { beforeAI: "دا سؤال مميز! خليني أدور في نظام إيفا المتقدم... 🔍" },
+    en: { beforeAI: "Great question! Let me search Eva's system... 🔍" }
+  }
+};
+
 // Enhanced Conversation patterns for tone detection
 export const CONVERSATION_PATTERNS = {
   formal: {
