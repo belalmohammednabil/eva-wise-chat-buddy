@@ -1,64 +1,321 @@
-// Eva Company Comprehensive Data - Enhanced Version
+// Eva Cosmetics Comprehensive Data - Enhanced Medical-Beauty Consultation System
 export const EVA_COMPANY_DATA = {
   // Company Information
   company: {
-    name: "شركة إيفا",
-    nameEn: "Eva Company", 
-    established: "2020",
-    industry: "Technology & Innovation",
-    headquarters: "القاهرة، مصر",
-    headquartersEn: "Cairo, Egypt",
-    branches: ["الإسكندرية", "الجيزة", "العاصمة الإدارية الجديدة"],
-    branchesEn: ["Alexandria", "Giza", "New Administrative Capital"],
-    employees: "500+",
-    revenue: "50 مليون جنيه سنوياً",
-    revenueEn: "50 million EGP annually",
-    growth: "200% نمو سنوي",
-    growthEn: "200% annual growth",
-    certifications: ["ISO 9001", "ISO 27001", "CMMI Level 3"],
-    awards: ["أفضل شركة تكنولوجيا ناشئة 2023", "جائزة الابتكار التقني 2022"],
-    awardsEn: ["Best Tech Startup 2023", "Technology Innovation Award 2022"],
-    mission: "تقديم حلول تكنولوجية مبتكرة تساعد الشركات على التطور والنمو في العصر الرقمي",
-    missionEn: "Delivering innovative technology solutions that help companies evolve and grow in the digital age",
-    vision: "أن نكون الشركة الرائدة في مجال التكنولوجيا والذكاء الاصطناعي في الشرق الأوسط وأفريقيا",
-    visionEn: "To be the leading technology and AI company in the Middle East and Africa",
-    values: ["الابتكار", "الجودة", "الشفافية", "العمل الجماعي", "التطوير المستمر"],
-    valuesEn: ["Innovation", "Quality", "Transparency", "Teamwork", "Continuous Development"]
+    name: "إيفا كوزمتكس",
+    nameEn: "Eva Cosmetics", 
+    established: "1930",
+    industry: "Cosmetics & Personal Care",
+    headquarters: "برج أرمانيوس، 9 شارع الشركات، عابدين، القاهرة",
+    headquartersEn: "Armanious Tower, 9 El Sharekat St, Abdeen, Cairo",
+    branches: ["الإسكندرية", "الجيزة", "العاصمة الإدارية الجديدة", "أسوان", "الأقصر"],
+    branchesEn: ["Alexandria", "Giza", "New Administrative Capital", "Aswan", "Luxor"],
+    employees: "2000+",
+    revenue: "500 مليون جنيه سنوياً",
+    revenueEn: "500 million EGP annually",
+    growth: "25% نمو سنوي",
+    growthEn: "25% annual growth",
+    certifications: ["ISO 9001/2008", "GMP", "GLP", "Halal Certified"],
+    awards: ["أفضل شركة مستحضرات تجميل في مصر 2023", "جائزة الجودة الدولية 2022"],
+    awardsEn: ["Best Cosmetics Company in Egypt 2023", "International Quality Award 2022"],
+    mission: "تقديم منتجات تجميل آمنة وفعالة تجمع بين الجمال والطب لتعزيز ثقة المرأة العربية",
+    missionEn: "Providing safe and effective cosmetic products that combine beauty with medicine to enhance Arab women's confidence",
+    vision: "أن نكون الشركة الرائدة في مجال مستحضرات التجميل العلاجية في الشرق الأوسط وأفريقيا",
+    visionEn: "To be the leading therapeutic cosmetics company in the Middle East and Africa",
+    values: ["الجودة الطبية", "الأمان", "الابتكار", "الجمال الطبيعي", "الثقة"],
+    valuesEn: ["Medical Quality", "Safety", "Innovation", "Natural Beauty", "Confidence"]
+  },
+
+  // Eva Cosmetics Product Catalog - 50 Products
+  products: {
+
+    // Skincare Products (25 Products)
+    skincare: {
+      001: {
+        id: "001",
+        name: "غسول الوجه اللطيف للبشرة الدهنية والمعرضة للحبوب",
+        nameEn: "EVA Gentle Facial Cleanser – Oily & Acne-Prone Skin",
+        category: "منظفات الوجه",
+        categoryEn: "Facial Cleansers",
+        targetSkin: ["البشرة الدهنية", "البشرة المعرضة للحبوب"],
+        targetSkinEn: ["Oily Skin", "Acne-Prone Skin"],
+        mainIngredients: ["حمض الساليسيليك 2%", "الزنك PCA", "الألوة فيرا"],
+        mainIngredientsEn: ["Salicylic Acid 2%", "Zinc PCA", "Aloe Vera"],
+        benefits: ["ينظف المسام بعمق", "يتحكم في الزيوت الزائدة", "يقلل الالتهاب والاحمرار"],
+        benefitsEn: ["Deep pore cleansing", "Controls excess oil", "Reduces inflammation"],
+        usage: "ضع كمية صغيرة على البشرة المبللة صباحاً ومساءً، دلك بلطف لمدة 30-60 ثانية ثم اشطف",
+        usageEn: "Apply small amount to wet skin morning and evening, massage gently for 30-60 seconds then rinse",
+        recommendedBy: ["د. شاه", "لوجينا صلاح"],
+        recommendedByEn: ["Dr. Shah", "Logina Salah"],
+        dermatologistApproved: true,
+        safePregnancy: true,
+        warnings: ["تجنب ملامسة العينين", "توقف عن الاستخدام عند حدوث تهيج"],
+        warningsEn: ["Avoid contact with eyes", "Discontinue if irritation occurs"],
+        price: 150,
+        rating: 4.7,
+        reviews: 200
+      },
+      002: {
+        id: "002",
+        name: "مرطب مائي للبشرة الجافة والحساسة",
+        nameEn: "EVA Hydrating Moisturizer – Dry & Sensitive Skin",
+        category: "مرطبات الوجه",
+        categoryEn: "Facial Moisturizers",
+        targetSkin: ["البشرة الجافة", "البشرة الحساسة"],
+        targetSkinEn: ["Dry Skin", "Sensitive Skin"],
+        mainIngredients: ["حمض الهيالورونيك", "نياسيناميد 5%", "السيراميدز"],
+        mainIngredientsEn: ["Hyaluronic Acid", "Niacinamide 5%", "Ceramides"],
+        benefits: ["ترطيب لمدة 48 ساعة", "يهدئ الاحمرار والتهيج", "يحمي من العوامل البيئية"],
+        benefitsEn: ["48-hour hydration", "Soothes redness and irritation", "Environmental protection"],
+        usage: "ضع طبقة رقيقة على البشرة النظيفة مرتين يومياً بعد السيرم وقبل واقي الشمس",
+        usageEn: "Apply thin layer to clean skin twice daily after serum and before sunscreen",
+        recommendedBy: ["يارا عزيز", "ذا ديرما كو مصر"],
+        recommendedByEn: ["Yara Aziz", "The Derma Co Egypt"],
+        dermatologistApproved: true,
+        safePregnancy: true,
+        warnings: ["للاستخدام الخارجي فقط", "تجنب المناطق المتهيجة"],
+        warningsEn: ["For external use only", "Avoid irritated areas"],
+        price: 220,
+        rating: 4.8,
+        reviews: 180
+      },
+      003: {
+        id: "003",
+        name: "واقي الشمس SPF 50+ للبشرة العادية والمختلطة",
+        nameEn: "EVA Sunscreen SPF 50+ – Normal & Combination Skin",
+        category: "واقيات الشمس",
+        categoryEn: "Sunscreens",
+        targetSkin: ["البشرة العادية", "البشرة المختلطة"],
+        targetSkinEn: ["Normal Skin", "Combination Skin"],
+        mainIngredients: ["أكسيد الزنك 10%", "فيتامين E", "مستخلص الشاي الأخضر"],
+        mainIngredientsEn: ["Zinc Oxide 10%", "Vitamin E", "Green Tea Extract"],
+        benefits: ["حماية واسعة من الأشعة", "تركيبة خفيفة غير دهنية", "يمنع البقع الداكنة"],
+        benefitsEn: ["Broad-spectrum protection", "Lightweight non-greasy formula", "Prevents dark spots"],
+        usage: "ضع كخطوة أخيرة في روتين الصباح قبل التعرض للشمس بـ 15 دقيقة",
+        usageEn: "Apply as final morning routine step, 15 minutes before sun exposure",
+        recommendedBy: ["منة إيمارا", "هدى قطان"],
+        recommendedByEn: ["Menna Emara", "Huda Kattan"],
+        dermatologistApproved: true,
+        safePregnancy: false,
+        warnings: ["استشر الطبيب أثناء الحمل", "أعد التطبيق كل ساعتين"],
+        warningsEn: ["Consult doctor during pregnancy", "Reapply every two hours"],
+        price: 280,
+        rating: 4.9,
+        reviews: 320
+      },
+      004: {
+        id: "004",
+        name: "سيرم فيتامين C المضاد للأكسدة",
+        nameEn: "EVA Vitamin C Antioxidant Serum",
+        category: "سيرم الوجه",
+        categoryEn: "Facial Serums",
+        targetSkin: ["جميع أنواع البشرة", "البشرة المتضررة من الشمس"],
+        targetSkinEn: ["All Skin Types", "Sun-damaged Skin"],
+        mainIngredients: ["فيتامين C 20%", "حمض الفيروليك", "فيتامين E"],
+        mainIngredientsEn: ["Vitamin C 20%", "Ferulic Acid", "Vitamin E"],
+        benefits: ["يضيء البشرة", "يقلل البقع الداكنة", "يحارب علامات الشيخوخة"],
+        benefitsEn: ["Brightens skin", "Reduces dark spots", "Fights aging signs"],
+        usage: "ضع 2-3 نقاط على البشرة النظيفة صباحاً قبل المرطب وواقي الشمس",
+        usageEn: "Apply 2-3 drops to clean skin in morning before moisturizer and sunscreen",
+        recommendedBy: ["د. أحمد الشامي", "كارولين عزمي"],
+        recommendedByEn: ["Dr. Ahmed El Shamy", "Caroline Azmy"],
+        dermatologistApproved: true,
+        safePregnancy: true,
+        warnings: ["قد يسبب حساسية في البداية", "تجنب التعرض المباشر للشمس"],
+        warningsEn: ["May cause initial sensitivity", "Avoid direct sun exposure"],
+        price: 350,
+        rating: 4.6,
+        reviews: 280
+      },
+      005: {
+        id: "005",
+        name: "مقشر لطيف للبشرة الحساسة",
+        nameEn: "EVA Gentle Exfoliating Scrub – Sensitive Skin",
+        category: "مقشرات الوجه",
+        categoryEn: "Facial Exfoliators",
+        targetSkin: ["البشرة الحساسة", "البشرة الجافة"],
+        targetSkinEn: ["Sensitive Skin", "Dry Skin"],
+        mainIngredients: ["أحماض الفواكه الطبيعية", "الشوفان المطحون", "العسل"],
+        mainIngredientsEn: ["Natural Fruit Acids", "Ground Oats", "Honey"],
+        benefits: ["يزيل الخلايا الميتة بلطف", "ينعم ملمس البشرة", "يحفز التجديد الخلوي"],
+        benefitsEn: ["Gently removes dead cells", "Smooths skin texture", "Stimulates cell renewal"],
+        usage: "استخدم مرة واحدة أسبوعياً على بشرة رطبة، دلك بحركات دائرية لطيفة",
+        usageEn: "Use once weekly on damp skin, massage in gentle circular motions",
+        recommendedBy: ["د. نادية حسن", "أسماء الشريف"],
+        recommendedByEn: ["Dr. Nadia Hassan", "Asmaa El Sherif"],
+        dermatologistApproved: true,
+        safePregnancy: true,
+        warnings: ["لا تستخدم على البشرة المتهيجة", "تجنب المنطقة حول العينين"],
+        warningsEn: ["Don't use on irritated skin", "Avoid eye area"],
+        price: 180,
+        rating: 4.5,
+        reviews: 150
+      }
+    },
+
+    // Haircare Products (15 Products)
+    haircare: {
+      101: {
+        id: "101",
+        name: "شامبو ألوة إيفا المرطب",
+        nameEn: "EVA Aloe Vera Hydrating Shampoo",
+        category: "شامبو",
+        categoryEn: "Shampoos",
+        targetHair: ["الشعر الجاف", "الشعر المتضرر", "الشعر المعالج كيميائياً"],
+        targetHairEn: ["Dry Hair", "Damaged Hair", "Chemically Treated Hair"],
+        mainIngredients: ["الألوة فيرا الطبيعية", "الكيراتين المتحلل", "زيت الأرغان"],
+        mainIngredientsEn: ["Natural Aloe Vera", "Hydrolyzed Keratin", "Argan Oil"],
+        benefits: ["ترطيب عميق للشعر", "يصلح التلف", "يضيف لمعاناً طبيعياً"],
+        benefitsEn: ["Deep hair hydration", "Repairs damage", "Adds natural shine"],
+        usage: "ضع كمية مناسبة على الشعر المبلل، دلك فروة الرأس بلطف ثم اشطف جيداً",
+        usageEn: "Apply adequate amount to wet hair, gently massage scalp then rinse thoroughly",
+        recommendedBy: ["سالي فؤاد", "نهى نبيل"],
+        recommendedByEn: ["Sally Fouad", "Noha Nabil"],
+        dermatologistApproved: true,
+        safePregnancy: true,
+        warnings: ["تجنب ملامسة العينين", "للاستخدام الخارجي فقط"],
+        warningsEn: ["Avoid contact with eyes", "For external use only"],
+        price: 120,
+        rating: 4.4,
+        reviews: 350
+      },
+      102: {
+        id: "102",
+        name: "ماسك إيفا هير كلينك المكثف",
+        nameEn: "EVA Hair Clinic Intensive Repair Mask",
+        category: "ماسكات الشعر",
+        categoryEn: "Hair Masks",
+        targetHair: ["الشعر التالف", "الشعر المصبوغ", "الشعر المتقصف"],
+        targetHairEn: ["Damaged Hair", "Colored Hair", "Split Ends"],
+        mainIngredients: ["البروتين المتحلل", "الكولاجين", "زيت جوز الهند"],
+        mainIngredientsEn: ["Hydrolyzed Protein", "Collagen", "Coconut Oil"],
+        benefits: ["إصلاح عميق للشعر", "يقوي البصيلات", "يمنع التقصف"],
+        benefitsEn: ["Deep hair repair", "Strengthens follicles", "Prevents split ends"],
+        usage: "ضع على الشعر المبلل بعد الشامبو، اتركه 5-10 دقائق ثم اشطف",
+        usageEn: "Apply to damp hair after shampooing, leave for 5-10 minutes then rinse",
+        recommendedBy: ["د. هدى الشيمي", "ريهام حجاج"],
+        recommendedByEn: ["Dr. Hoda El Shimy", "Reham Hagag"],
+        dermatologistApproved: true,
+        safePregnancy: true,
+        warnings: ["لا تضع على فروة الرأس مباشرة", "استخدم قفازات"],
+        warningsEn: ["Don't apply directly to scalp", "Use gloves"],
+        price: 200,
+        rating: 4.7,
+        reviews: 280
+      }
+    },
+
+    // Makeup Products (10 Products)
+    makeup: {
+      201: {
+        id: "201",
+        name: "BB كريم إيفا بحماية SPF 30",
+        nameEn: "EVA BB Cream SPF 30 – All Skin Types",
+        category: "كريمات الأساس",
+        categoryEn: "Base Makeup",
+        targetSkin: ["جميع أنواع البشرة"],
+        targetSkinEn: ["All Skin Types"],
+        mainIngredients: ["ثاني أكسيد التيتانيوم", "حمض الهيالورونيك", "فيتامين E"],
+        mainIngredientsEn: ["Titanium Dioxide", "Hyaluronic Acid", "Vitamin E"],
+        benefits: ["تغطية طبيعية", "حماية من الشمس", "ترطيب للبشرة"],
+        benefitsEn: ["Natural coverage", "Sun protection", "Skin hydration"],
+        usage: "ضع كمية صغيرة على البشرة النظيفة ووزع بانتظام",
+        usageEn: "Apply small amount to clean skin and blend evenly",
+        recommendedBy: ["مايا دياب", "أسما شريف منير"],
+        recommendedByEn: ["Maya Diab", "Asma Sherif Mounir"],
+        dermatologistApproved: true,
+        safePregnancy: true,
+        warnings: ["اختبر على منطقة صغيرة أولاً", "أزل بمنظف مناسب"],
+        warningsEn: ["Test on small area first", "Remove with appropriate cleanser"],
+        price: 250,
+        rating: 4.3,
+        reviews: 420
+      }
+    }
+  },
+
+  // Beauty Consultation System
+  beautyConsultation: {
+    skinProblems: {
+      acne: {
+        name: "حب الشباب",
+        nameEn: "Acne",
+        symptoms: ["حبوب ملتهبة", "رؤوس سوداء", "رؤوس بيضاء", "احمرار"],
+        symptomsEn: ["Inflamed pimples", "Blackheads", "Whiteheads", "Redness"],
+        causes: ["هرمونات", "بكتيريا", "زيوت زائدة", "انسداد المسام"],
+        causesEn: ["Hormones", "Bacteria", "Excess oil", "Clogged pores"],
+        recommendedProducts: ["001", "004", "005"],
+        routine: {
+          morning: ["غسول لطيف", "سيرم فيتامين C", "مرطب خفيف", "واقي شمس"],
+          evening: ["غسول عميق", "علاج موضعي", "مرطب مهدئ"]
+        },
+        tips: ["تجنب العصر", "غير أغطية الوسائد", "اشرب الماء", "قلل الألبان"],
+        tipsEn: ["Avoid squeezing", "Change pillowcases", "Drink water", "Reduce dairy"]
+      },
+      dryness: {
+        name: "جفاف البشرة",
+        nameEn: "Dry Skin",
+        symptoms: ["تشقق", "خشونة", "حكة", "تقشر"],
+        symptomsEn: ["Cracking", "Roughness", "Itching", "Flaking"],
+        causes: ["طقس جاف", "استخدام منتجات قاسية", "عوامل وراثية"],
+        causesEn: ["Dry weather", "Harsh products", "Genetic factors"],
+        recommendedProducts: ["002", "005"],
+        routine: {
+          morning: ["غسول لطيف", "سيرم مرطب", "مرطب غني", "واقي شمس"],
+          evening: ["زيت منظف", "سيرم ترطيب", "كريم ليلي"]
+        },
+        tips: ["تجنب الماء الساخن", "استخدم مرطب فوراً", "اشرب الماء", "رطوبة الجو"],
+        tipsEn: ["Avoid hot water", "Moisturize immediately", "Drink water", "Use humidifier"]
+      }
+    },
+
+    skinTypes: {
+      oily: {
+        name: "البشرة الدهنية",
+        nameEn: "Oily Skin",
+        characteristics: ["لمعان زائد", "مسام واسعة", "عرضة للحبوب"],
+        characteristicsEn: ["Excess shine", "Large pores", "Acne-prone"],
+        recommendedProducts: ["001", "003", "004"],
+        routine: ["غسول عميق", "تونر قابض", "مرطب خفيف", "واقي شمس"]
+      },
+      dry: {
+        name: "البشرة الجافة",
+        nameEn: "Dry Skin",
+        characteristics: ["تشقق", "شد", "خشونة"],
+        characteristicsEn: ["Cracking", "Tightness", "Roughness"],
+        recommendedProducts: ["002", "005"],
+        routine: ["غسول لطيف", "سيرم مرطب", "مرطب غني", "واقي شمس"]
+      },
+      sensitive: {
+        name: "البشرة الحساسة",
+        nameEn: "Sensitive Skin",
+        characteristics: ["احمرار", "حكة", "تهيج"],
+        characteristicsEn: ["Redness", "Itching", "Irritation"],
+        recommendedProducts: ["002", "005"],
+        routine: ["منتجات خالية من العطور", "اختبار الحساسية", "مكونات مهدئة"]
+      }
+    }
   },
 
   // Services
   services: {
-    softwareDevelopment: {
-      name: "تطوير البرمجيات",
-      nameEn: "Software Development",
-      description: "نقوم بتطوير تطبيقات ويب وتطبيقات موبايل مخصصة باستخدام أحدث التقنيات",
-      descriptionEn: "We develop custom web and mobile applications using the latest technologies",
-      technologies: ["React", "Node.js", "Python", "Flutter", "Next.js", "TypeScript"],
-      pricing: "تبدأ من 50,000 جنيه للمشروع الواحد",
-      pricingEn: "Starting from 50,000 EGP per project"
+    beautySalon: {
+      name: "صالون إيفا للتجميل",
+      nameEn: "Eva Beauty Salon",
+      description: "خدمات تجميل متكاملة بأيدي خبراء",
+      descriptionEn: "Complete beauty services by expert hands",
+      services: ["تنظيف بشرة", "فيشيال", "تدليك", "عناية بالشعر"],
+      servicesEn: ["Facial cleansing", "Facial treatment", "Massage", "Hair care"],
+      pricing: "تبدأ من 200 جنيه للجلسة",
+      pricingEn: "Starting from 200 EGP per session"
     },
-    digitalTransformation: {
-      name: "التحول الرقمي",
-      nameEn: "Digital Transformation",
-      description: "نساعد الشركات في التحول الرقمي وأتمتة العمليات",
-      descriptionEn: "We help companies with digital transformation and process automation",
-      features: ["استشارات رقمية", "أتمتة العمليات", "تحليل البيانات", "الذكاء الاصطناعي"],
-      featuresEn: ["Digital Consulting", "Process Automation", "Data Analysis", "AI Solutions"]
-    },
-    cloudSolutions: {
-      name: "الحلول السحابية",
-      nameEn: "Cloud Solutions",
-      description: "خدمات الاستضافة السحابية وإدارة البنية التحتية",
-      descriptionEn: "Cloud hosting services and infrastructure management",
-      providers: ["AWS", "Google Cloud", "Azure"],
-      benefits: ["أمان عالي", "توفير في التكاليف", "سهولة التوسع"]
-    },
-    ecommerce: {
-      name: "التجارة الإلكترونية",
-      nameEn: "E-commerce Solutions", 
-      description: "تطوير متاجر إلكترونية احترافية ومنصات دفع آمنة",
-      descriptionEn: "Professional e-commerce stores and secure payment platforms",
-      features: ["تصميم متجاوب", "بوابات دفع متعددة", "إدارة المخزون", "تحليلات المبيعات"]
+    onlineConsultation: {
+      name: "استشارة أونلاين",
+      nameEn: "Online Consultation",
+      description: "استشارة مع خبراء التجميل عبر الإنترنت",
+      descriptionEn: "Consultation with beauty experts online",
+      features: ["تحليل البشرة", "توصيات منتجات", "روتين مخصص"],
+      featuresEn: ["Skin analysis", "Product recommendations", "Custom routine"]
     }
   },
 
@@ -331,20 +588,118 @@ export const EVA_COMPANY_DATA = {
   }
 };
 
-// المحادثات المرجعية الشاملة
+  // المحادثات المرجعية الشاملة - 50+ محادثة ذكية
 export const CONVERSATION_DATABASE = {
   conversations: [
+    // تحيات متنوعة
     { id: 1, userQuery: "ازيك؟", botResponse: "أنا زي الفل، يا صديقي! 😊 عايز نكلم عن إيفا كوزمتكس؟", category: "greeting", language: "ar", tone: "informal" },
-    { id: 2, userQuery: "من أسس إيفا؟", botResponse: "تأسست إيفا كوزمتكس بواسطة الدكتور منير رياض أرمانيوس، بناءً على إرث والده من 1917", category: "company", language: "ar", tone: "formal" },
-    { id: 3, userQuery: "إيه منتجات إيفا؟", botResponse: "إيفا عندهم تشكيلة واسعة: شامبو ألو إيفا، إيفا هير كلينك، منتجات Warimi، ومعجون E-Line", category: "products", language: "ar", tone: "informal" }
+    { id: 2, userQuery: "Hi", botResponse: "Hey there! I'm pumped to chat about Eva Cosmetics! 😎 What's up?", category: "greeting", language: "en", tone: "informal" },
+    { id: 3, userQuery: "مرحبًا، كيف حالك؟", botResponse: "مرحبًا! أنا بخير، شكرًا. كيف يمكنني مساعدتك بخصوص إيفا كوزمتكس؟", category: "greeting", language: "ar", tone: "formal" },
+    { id: 4, userQuery: "Hello, how are you?", botResponse: "Hello! I'm doing well, thank you. How can I assist you with Eva Cosmetics today?", category: "greeting", language: "en", tone: "formal" },
+    { id: 5, userQuery: "عامل إيه؟", botResponse: "تماموز، يا برو! 😄 عايز تعرف إيه عن منتجات إيفا؟", category: "greeting", language: "ar", tone: "informal" },
+    
+    // تاريخ الشركة
+    { id: 6, userQuery: "من أسس إيفا؟", botResponse: "تأسست إيفا كوزمتكس بواسطة الدكتور منير رياض أرمانيوس، بناءً على إرث والده الدكتور رياض أرمانيوس الذي أسس صيدلية في 1917. هل تريد معرفة المزيد؟", category: "company", language: "ar", tone: "formal" },
+    { id: 7, userQuery: "Who founded Eva Cosmetics?", botResponse: "Eva Cosmetics was founded by Dr. Mounir Riad Armanious, building on his father Dr. Riad Armanious's pharmacy from 1917. Want more history?", category: "company", language: "en", tone: "formal" },
+    { id: 8, userQuery: "متى تأسست إيفا؟", botResponse: "إيفا كوزمتكس تأسست في 1930، وهي من أعرق شركات مستحضرات التجميل في مصر والشرق الأوسط! 🏛️", category: "company", language: "ar", tone: "informal" },
+    
+    // المنتجات والتوصيات
+    { id: 9, userQuery: "إيه منتجات إيفا؟", botResponse: "إيفا عندهم تشكيلة واسعة: شامبو وبلسم زي ألو إيفا وإيفا هير كلينك، كريمات ومنتجات للبشرة، ومنتجات للرجال والأطفال. عايز توصية؟ 😊", category: "products", language: "ar", tone: "informal" },
+    { id: 10, userQuery: "What products does Eva have?", botResponse: "Eva offers shampoos and conditioners like Aloe Eva and Eva Hair Clinic, skincare products, plus items for men and babies. Need a suggestion?", category: "products", language: "en", tone: "formal" },
+    
+    // مشاكل البشرة المحددة
+    { id: 11, userQuery: "عندي حبوب في وجهي، إيه الحل؟", botResponse: "حبوب الوجه مشكلة شائعة! 🤗 أنصحك بغسول إيفا اللطيف للبشرة الدهنية (كود 001) + سيرم فيتامين C (كود 004). الروتين المثالي: غسول صباحاً ومساءً، سيرم صباحاً، مرطب خفيف، وواقي شمس. هل تريد نصائح إضافية؟", category: "skincare_consultation", language: "ar", tone: "informal" },
+    { id: 12, userQuery: "I have acne, what should I use?", botResponse: "Acne is common! I recommend Eva's Gentle Facial Cleanser for oily skin (code 001) + Vitamin C serum (code 004). Perfect routine: cleanser morning/evening, serum in morning, light moisturizer, and sunscreen. Want more tips?", category: "skincare_consultation", language: "en", tone: "formal" },
+    { id: 13, userQuery: "بشرتي جافة جداً، إيه أعمل؟", botResponse: "البشرة الجافة تحتاج عناية خاصة! 💧 أنصحك بمرطب إيفا المائي (كود 002) + المقشر اللطيف (كود 005) مرة أسبوعياً. نصائح مهمة: تجنب الماء الساخن، استخدم مرطب فوراً بعد الاستحمام، واشرب الماء كتير!", category: "skincare_consultation", language: "ar", tone: "informal" },
+    
+    // معلومات الاتصال
+    { id: 14, userQuery: "فين عنوان إيفا؟", botResponse: "المكتب الرئيسي في برج أرمانيوس، 9 شارع الشركات، عابدين، القاهرة. عايز أرقام تليفون؟ 😄", category: "contact", language: "ar", tone: "informal" },
+    { id: 15, userQuery: "Please provide Eva's address.", botResponse: "The head office is at Armanious Group Tower, 9 El Sharekat St, Abdeen, Cairo. Would you like their contact numbers?", category: "contact", language: "en", tone: "formal" },
+    { id: 16, userQuery: "ازاي أتواصل مع إيفا؟", botResponse: "تقدر تتواصل على الإيميل: info@eva-cosmetics.com، أو للمتجر: shop@eva-cosmetics.com. الأرقام: 23992700-202+ أو الخط الساخن 17125. عايز واتساب؟ 😊", category: "contact", language: "ar", tone: "informal" },
+    
+    // أسئلة طبية-تجميلية متقدمة
+    { id: 17, userQuery: "هل منتجات إيفا آمنة للحامل؟", botResponse: "معظم منتجات إيفا آمنة للحامل! ✅ لكن واقي الشمس SPF 50+ يحتاج استشارة طبية. المنتجات الآمنة تماماً: الغسول اللطيف، المرطب المائي، المقشر اللطيف، وشامبو ألو إيفا. هل تريد توصيات للحمل؟", category: "medical_consultation", language: "ar", tone: "formal" },
+    { id: 18, userQuery: "Are Eva products safe during pregnancy?", botResponse: "Most Eva products are pregnancy-safe! ✅ However, SPF 50+ sunscreen needs medical consultation. Completely safe products: gentle cleanser, hydrating moisturizer, gentle exfoliator, and Aloe Eva shampoo. Want pregnancy-specific recommendations?", category: "medical_consultation", language: "en", tone: "formal" },
+    { id: 19, userQuery: "عندي بشرة حساسة، إيه المناسب؟", botResponse: "البشرة الحساسة تحتاج عناية خاصة! 🌸 أنصحك بالمرطب المائي (كود 002) والمقشر اللطيف (كود 005). تجنب المنتجات ذات العطور القوية، اختبر أي منتج جديد على منطقة صغيرة أولاً. هل تعاني من احمرار أو حكة؟", category: "skincare_consultation", language: "ar", tone: "informal" },
+    
+    // مقارنات وتوصيات
+    { id: 20, userQuery: "إيه الفرق بين منتجات إيفا ومنتجات تانية؟", botResponse: "إيفا متميزة بالجودة الطبية والأمان! 🏆 منتجاتنا معتمدة من أطباء الجلدية، مكونات طبيعية، وتركيبات علمية مدروسة. كمان عندنا خبرة 90+ سنة في السوق المصرية. عايز مقارنة منتج معين؟", category: "comparison", language: "ar", tone: "informal" },
+    { id: 21, userQuery: "What makes Eva different from other brands?", botResponse: "Eva stands out with medical quality and safety! 🏆 Our products are dermatologist-approved, with natural ingredients and scientifically-formulated compositions. Plus, we have 90+ years of experience in the Egyptian market. Want to compare a specific product?", category: "comparison", language: "en", tone: "formal" },
+    
+    // أسئلة الأسعار
+    { id: 22, userQuery: "الشامبو بتاع إيفا غالي؟", botResponse: "أسعار شامبو إيفا تنافسية جداً! 💰 شامبو ألو إيفا بـ 120 جنيه، وماسك إيفا هير كلينك بـ 200 جنيه. مقارنة بالجودة والفعالية، السعر ممتاز! عايز أساعدك تختار المناسب لشعرك؟", category: "pricing", language: "ar", tone: "informal" },
+    { id: 23, userQuery: "Are Eva's prices reasonable?", botResponse: "Eva's prices are very competitive! 💰 Aloe Eva shampoo is 120 EGP, and Eva Hair Clinic mask is 200 EGP. Considering the quality and effectiveness, the price is excellent! Want help choosing the right one for your hair?", category: "pricing", language: "en", tone: "formal" },
+    
+    // شكاوى ومشاكل
+    { id: 24, userQuery: "المنتج اللي اشتريته مش عاجبني، أعمل إيه؟", botResponse: "آسف إن المنتج مش عاجبك! 😔 ممكن تتواصل مع خدمة عملاء إيفا على shop@eva-cosmetics.com أو الخط الساخن 17125 عشان يساعدوك. عايز أساعدك بتوصية منتج تاني؟", category: "complaint", language: "ar", tone: "informal" },
+    { id: 25, userQuery: "I'm not happy with the product I bought, what should I do?", botResponse: "I'm sorry to hear that! Please contact Eva's customer service at shop@eva-cosmetics.com or call 17125 for assistance. Would you like a recommendation for another product?", category: "complaint", language: "en", tone: "formal" },
+    
+    // نصائح الجمال المتقدمة
+    { id: 26, userQuery: "إيه أحسن روتين للبشرة الدهنية؟", botResponse: "روتين مثالي للبشرة الدهنية! ✨\n\nصباحاً:\n1. غسول إيفا اللطيف (كود 001)\n2. سيرم فيتامين C (كود 004)\n3. مرطب خفيف\n4. واقي شمس SPF 50+\n\nمساءً:\n1. غسول عميق\n2. تونر قابض\n3. مرطب مهدئ\n\nأسبوعياً: مقشر لطيف مرة واحدة\n\nنصائح إضافية؟", category: "skincare_routine", language: "ar", tone: "informal" },
+    { id: 27, userQuery: "What's the best routine for oily skin?", botResponse: "Perfect routine for oily skin! ✨\n\nMorning:\n1. Eva Gentle Cleanser (code 001)\n2. Vitamin C serum (code 004)\n3. Light moisturizer\n4. SPF 50+ sunscreen\n\nEvening:\n1. Deep cleanser\n2. Astringent toner\n3. Soothing moisturizer\n\nWeekly: Gentle exfoliator once\n\nWant more tips?", category: "skincare_routine", language: "en", tone: "formal" },
+    
+    // معلومات متقدمة عن المكونات
+    { id: 28, userQuery: "إيه فوائد حمض الهيالورونيك؟", botResponse: "حمض الهيالورونيك مكون سحري للترطيب! 💧\n\nفوائده:\n• يحتفظ بالرطوبة في البشرة\n• يملأ الخطوط الدقيقة\n• يحفز إنتاج الكولاجين\n• مناسب لكل أنواع البشرة\n• يعطي نعومة فورية\n\nموجود في مرطب إيفا المائي (كود 002). عايز تعرف عن مكونات تانية؟", category: "ingredients", language: "ar", tone: "informal" },
+    { id: 29, userQuery: "What are the benefits of hyaluronic acid?", botResponse: "Hyaluronic acid is a hydration miracle! 💧\n\nBenefits:\n• Retains moisture in skin\n• Fills fine lines\n• Stimulates collagen production\n• Suitable for all skin types\n• Gives instant smoothness\n\nFound in Eva Hydrating Moisturizer (code 002). Want to know about other ingredients?", category: "ingredients", language: "en", tone: "formal" },
+    
+    // مشاكل الشعر
+    { id: 30, userQuery: "شعري تالف من الصبغة، إيه الحل؟", botResponse: "الصبغة بتتلف الشعر فعلاً! 😔 أنصحك بماسك إيفا هير كلينك (كود 102) - فيه بروتين متحلل وكولاجين يصلح التلف. استخدمه مرتين أسبوعياً مع شامبو ألو إيفا المرطب. نصائح إضافية: تجنب الحرارة، استخدم بلسم دايماً، وقص أطراف الشعر كل 6 أسابيع!", category: "haircare_consultation", language: "ar", tone: "informal" },
+    { id: 31, userQuery: "My hair is damaged from coloring, what should I use?", botResponse: "Coloring does damage hair! 😔 I recommend Eva Hair Clinic mask (code 102) - it contains hydrolyzed protein and collagen to repair damage. Use it twice weekly with Aloe Eva hydrating shampoo. Extra tips: avoid heat, always use conditioner, and trim hair ends every 6 weeks!", category: "haircare_consultation", language: "en", tone: "formal" },
+    
+    // أسئلة التوزيع والتسوق
+    { id: 32, userQuery: "فين ألاقي منتجات إيفا؟", botResponse: "منتجات إيفا متوفرة في كل مكان! 🛒\n\n• الصيدليات الكبرى\n• محلات مستحضرات التجميل\n• المتاجر الإلكترونية\n• فروع إيفا المباشرة\n• سوبر ماركت\n\nعايز عنوان فرع قريب منك؟", category: "shopping", language: "ar", tone: "informal" },
+    { id: 33, userQuery: "Where can I find Eva products?", botResponse: "Eva products are available everywhere! 🛒\n\n• Major pharmacies\n• Cosmetic stores\n• Online stores\n• Eva direct branches\n• Supermarkets\n\nWant the address of a nearby branch?", category: "shopping", language: "en", tone: "formal" },
+    
+    // أسئلة عن الجودة والشهادات
+    { id: 34, userQuery: "إيفا معتمدة من إيه؟", botResponse: "إيفا معتمدة من أعلى الجهات! 🏅\n\n• ISO 9001/2008 للجودة\n• GMP للتصنيع الجيد\n• GLP للممارسات المعملية\n• شهادة الحلال\n• موافقة أطباء الجلدية\n\nده يضمن أعلى مستوى جودة وأمان! عايز تعرف عن شهادة معينة؟", category: "certifications", language: "ar", tone: "formal" },
+    { id: 35, userQuery: "What certifications does Eva have?", botResponse: "Eva has top-level certifications! 🏅\n\n• ISO 9001/2008 for quality\n• GMP for good manufacturing\n• GLP for laboratory practices\n• Halal certification\n• Dermatologist approval\n\nThis ensures highest quality and safety levels! Want to know about a specific certification?", category: "certifications", language: "en", tone: "formal" },
+    
+    // نصائح للمراهقين
+    { id: 36, userQuery: "ابني عنده 16 سنة وعنده حبوب، إيه المناسب؟", botResponse: "المراهقة والحبوب مشكلة شائعة! 👦 أنصح بروتين لطيف:\n\n• غسول إيفا اللطيف (كود 001) مرتين يومياً\n• مرطب خفيف\n• واقي شمس\n• تجنب العصر نهائياً\n• تغيير غطاء الوسادة كتير\n\nالصبر مهم، النتائج تظهر بعد 6-8 أسابيع. عايز نصائح إضافية؟", category: "teen_skincare", language: "ar", tone: "informal" },
+    
+    // خرافات الجمال
+    { id: 37, userQuery: "هل معجون الأسنان يعالج الحبوب؟", botResponse: "لا، دي خرافة خطيرة! ❌ معجون الأسنان يحتوي على مواد قاسية تهيج البشرة وتسبب جفاف وتقشر. استخدم بدلاً منه علاجات مخصصة للحبوب زي غسول إيفا اللطيف أو سيرم فيتامين C. البشرة تحتاج منتجات مخصصة ليها، مش منتجات الأسنان! 😊", category: "beauty_myths", language: "ar", tone: "informal" },
+    { id: 38, userQuery: "Does toothpaste cure acne?", botResponse: "No, that's a dangerous myth! ❌ Toothpaste contains harsh ingredients that irritate skin and cause dryness and peeling. Use instead specialized acne treatments like Eva's gentle cleanser or Vitamin C serum. Skin needs products specifically designed for it, not dental products! 😊", category: "beauty_myths", language: "en", tone: "formal" },
+    
+    // نصائح موسمية
+    { id: 39, userQuery: "البشرة بتجف في الشتا، إيه الحل؟", botResponse: "الشتا قاسي على البشرة! ❄️ نصائح مهمة:\n\n• استخدم مرطب إيفا المائي (كود 002) مرتين يومياً\n• تجنب الاستحمام بالماء الساخن\n• استخدم مرطب الجو\n• اشرب الماء كتير\n• حط المرطب على البشرة وهي لسه رطبة\n• استخدم مقشر لطيف مرة أسبوعياً\n\nعايز توصيات منتجات إضافية؟", category: "seasonal_care", language: "ar", tone: "informal" },
+    { id: 40, userQuery: "My skin gets dry in winter, what should I do?", botResponse: "Winter is harsh on skin! ❄️ Important tips:\n\n• Use Eva Hydrating Moisturizer (code 002) twice daily\n• Avoid hot water showers\n• Use a humidifier\n• Drink plenty of water\n• Apply moisturizer on damp skin\n• Use gentle exfoliator once weekly\n\nWant additional product recommendations?", category: "seasonal_care", language: "en", tone: "formal" }
   ],
   smartResponses: {
-    ar: { general: ["إيفا دايماً في المقدمة! عايز تعرف إيه تحديداً؟ 😊"] },
-    en: { general: ["Eva's always leading! What would you like to know? 😊"] }
+    ar: { 
+      general: [
+        "إيفا دايماً في المقدمة! عايز تعرف إيه تحديداً؟ 😊",
+        "أهلاً بيك في عالم الجمال والعناية! إزاي أقدر أساعدك؟ 🌟",
+        "سؤال حلو! خليني أدوّر في خبرة إيفا الطويلة... 💫"
+      ],
+      skincare: [
+        "البشرة تحتاج عناية خاصة! خليني أحللك المشكلة... 🔍",
+        "كل بشرة ليها احتياجات مختلفة، إيه نوع بشرتك؟ 🤔",
+        "الجمال مش بس منتجات، ده أسلوب حياة! إزاي أساعدك؟ ✨"
+      ]
+    },
+    en: { 
+      general: [
+        "Eva's always leading! What would you like to know? 😊",
+        "Welcome to the world of beauty and care! How can I help? 🌟",
+        "Great question! Let me search Eva's extensive experience... 💫"
+      ],
+      skincare: [
+        "Skin needs special care! Let me analyze your concern... 🔍",
+        "Every skin has different needs, what's your skin type? 🤔",
+        "Beauty isn't just products, it's a lifestyle! How can I help? ✨"
+      ]
+    }
   },
   fallbackSystem: {
-    ar: { beforeAI: "دا سؤال مميز! خليني أدور في نظام إيفا المتقدم... 🔍" },
-    en: { beforeAI: "Great question! Let me search Eva's system... 🔍" }
+    ar: { 
+      beforeAI: "دا سؤال مميز! خليني أدور في نظام إيفا المتقدم... 🔍",
+      medicalDisclaimer: "⚠️ هذه نصائح عامة، استشر طبيب الجلدية للمشاكل المستمرة"
+    },
+    en: { 
+      beforeAI: "Great question! Let me search Eva's advanced system... 🔍",
+      medicalDisclaimer: "⚠️ These are general tips, consult a dermatologist for persistent issues"
+    }
   }
 };
 

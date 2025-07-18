@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Globe, Mic, MicOff, Volume2, VolumeX, Settings, RefreshCw, Copy, Download, ChevronDown } from 'lucide-react';
+import { Send, Bot, User, Globe, Mic, MicOff, Volume2, VolumeX, Settings, RefreshCw, Copy, Download, ChevronDown, Stethoscope, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
@@ -18,10 +18,19 @@ interface Message {
   language: 'ar' | 'en';
   tone?: 'formal' | 'informal';
   source?: 'eva' | 'groq';
+  productRecommendations?: string[];
+  medicalAdvice?: boolean;
 }
 
 interface ChatbotProps {
   apiKey?: string;
+}
+
+interface SkinAnalysis {
+  skinType: string;
+  problems: string[];
+  recommendations: string[];
+  routine: string[];
 }
 
 const EvaChatbot: React.FC<ChatbotProps> = ({ apiKey = 'demo-key' }) => {
@@ -34,7 +43,10 @@ const EvaChatbot: React.FC<ChatbotProps> = ({ apiKey = 'demo-key' }) => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [groqService] = useState(() => new GroqService(apiKey));
   const [conversationMode, setConversationMode] = useState<'smart' | 'eva-only' | 'ai-only'>('smart');
+  const [skinAnalysis, setSkinAnalysis] = useState<SkinAnalysis | null>(null);
+  const [isRecording, setIsRecording] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const { toast } = useToast();
 
   // Initialize with welcome message
@@ -42,8 +54,8 @@ const EvaChatbot: React.FC<ChatbotProps> = ({ apiKey = 'demo-key' }) => {
     const welcomeMessage: Message = {
       id: '1',
       content: language === 'ar' 
-        ? 'أهلاً وسهلاً! أنا مساعد إيفا الذكي 🤖 إزيك النهاردة؟ أقدر أساعدك في أي حاجة خاصة بشركة إيفا أو أي استفسارات تانية! اكتب بالعربي أو الإنجليزي زي ما تحب، وهاكتشف إذا كنت عايز تتكلم بشكل رسمي ولا ودود.'
-        : 'Hello and welcome! I\'m Eva\'s smart assistant 🤖 How are you today? I can help you with anything about Eva Company or any other inquiries! Write in Arabic or English as you prefer, and I\'ll detect whether you want to communicate formally or friendly.',
+        ? 'أهلاً وسهلاً! أنا مساعد إيفا الذكي للجمال والعناية 💄✨\n\nأنا هنا عشان أساعدك في:\n🌸 تحليل نوع بشرتك وحل مشاكلها\n💅 اختيار المنتجات المناسبة علمياً\n🧴 بناء روتين عناية مثالي\n👩‍⚕️ نصائح طبية-تجميلية آمنة\n🛍️ توصيات منتجات إيفا المناسبة\n\nاكتب أو سجل رسالة صوتية عن مشكلتك، وأنا هاحللك الوضع وأديك الحل المناسب! 😊'
+        : 'Hello and welcome! I\'m Eva\'s smart beauty and care assistant 💄✨\n\nI\'m here to help you with:\n🌸 Analyzing your skin type and solving problems\n💅 Choosing scientifically suitable products\n🧴 Building the perfect care routine\n👩‍⚕️ Safe medical-cosmetic advice\n🛍️ Eva product recommendations\n\nWrite or record a voice message about your concern, and I\'ll analyze your situation and give you the right solution! 😊',
       isUser: false,
       timestamp: new Date(),
       language,
