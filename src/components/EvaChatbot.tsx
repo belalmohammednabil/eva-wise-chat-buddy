@@ -70,252 +70,175 @@ const EvaChatbot: React.FC<ChatbotProps> = ({ apiKey = 'demo-key' }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Enhanced Eva data search with comprehensive matching - NO EMPTY RESPONSES
+  // Smart delay for realistic responses
+  const addDelay = (baseTime: number = 1000): Promise<void> => {
+    return new Promise(resolve => setTimeout(resolve, baseTime + Math.random() * 1500));
+  };
+
+  // Enhanced Eva data search - Smart and contextual responses
   const searchEvaData = (query: string, userLanguage: 'ar' | 'en'): string | null => {
     const lowerQuery = query.toLowerCase();
     const data = EVA_COMPANY_DATA;
     
-    // First check the conversation database for exact or similar matches
-    const matchingConversations = CONVERSATION_DATABASE.conversations.filter(conv => {
-      const queryLower = conv.userQuery.toLowerCase();
-      return queryLower.includes(lowerQuery) || lowerQuery.includes(queryLower) ||
-             conv.userQuery.split(' ').some(word => lowerQuery.includes(word.toLowerCase()));
-    });
-
-    if (matchingConversations.length > 0) {
-      // Sort by language match and return the best match
-      const languageMatches = matchingConversations.filter(conv => conv.language === userLanguage);
-      if (languageMatches.length > 0) {
-        return languageMatches[0].botResponse;
-      }
-      return matchingConversations[0].botResponse;
+    // Check conversation database first for exact matches
+    const exactMatch = CONVERSATION_DATABASE.conversations.find(conv => 
+      conv.userQuery.toLowerCase() === lowerQuery || 
+      lowerQuery.includes(conv.userQuery.toLowerCase())
+    );
+    
+    if (exactMatch && exactMatch.language === userLanguage) {
+      return exactMatch.botResponse;
     }
 
-    const names = ['حبيبي', 'صديقي', 'بطل', 'محترم', 'استاذ', 'يا فندم'];
-    const englishNames = ['buddy', 'friend', 'dear', 'sir', 'mate'];
+    // Smart skin problem detection and product recommendation
+    const skinProblems = {
+      acne: ['حبوب', 'حب الشباب', 'بثور', 'رؤوس سوداء', 'acne', 'pimples', 'breakouts', 'blackheads'],
+      dryness: ['جفاف', 'جافة', 'تشقق', 'خشونة', 'dry', 'dryness', 'rough', 'flaky'],
+      oily: ['دهنية', 'زيوت', 'لمعان', 'دهون', 'oily', 'greasy', 'shiny', 'sebum'],
+      sensitive: ['حساسة', 'تهيج', 'احمرار', 'حكة', 'sensitive', 'irritation', 'redness', 'itchy'],
+      aging: ['تجاعيد', 'شيخوخة', 'خطوط', 'ترهل', 'wrinkles', 'aging', 'fine lines', 'sagging'],
+      dark_spots: ['بقع', 'تصبغ', 'potg داكنة', 'تلون', 'dark spots', 'pigmentation', 'melasma']
+    };
 
-    // Enhanced greetings detection
+    // Detect user's skin problem
+    let detectedProblem = '';
+    let recommendedProducts: string[] = [];
+    
+    for (const [problem, keywords] of Object.entries(skinProblems)) {
+      if (keywords.some(keyword => lowerQuery.includes(keyword))) {
+        detectedProblem = problem;
+        break;
+      }
+    }
+
+    // Product recommendations based on detected problem
+    if (detectedProblem) {
+      const recommendations = {
+        acne: {
+          products: ['001', '004', '005'],
+          arMessage: `فهمت إن عندك مشكلة حبوب! 🤗 دي مشكلة شائعة وليها حل:\n\n🧴 المنتجات المناسبة:\n• غسول إيفا اللطيف للبشرة الدهنية (كود 001) - 150ج\n  ▫️ يحتوي على حمض الساليسيليك 2% لتنظيف المسام\n  ▫️ الزنك PCA يقلل البكتيريا\n  ▫️ الألوة فيرا تهدئ الالتهاب\n\n• سيرم فيتامين C المضاد للأكسدة (كود 004) - 350ج\n  ▫️ يفتح البقع الداكنة من آثار الحبوب\n  ▫️ يحارب البكتيريا الضارة\n\n🔄 الروتين المثالي:\nصباحاً: غسول → سيرم → مرطب خفيف → واقي شمس\nمساءً: غسول → علاج موضعي → مرطب مهدئ\n\n⚠️ نصائح مهمة:\n• لا تعصر الحبوب نهائياً\n• غير غطاء الوسادة يومياً\n• تجنب لمس الوجه\n• النتائج تظهر بعد 4-6 أسابيع\n\nعايز تعرف أكتر عن منتج معين؟`,
+          enMessage: `I understand you have acne concerns! 🤗 This is common and treatable:\n\n🧴 Recommended Products:\n• Eva Gentle Facial Cleanser for Oily Skin (Code 001) - 150 EGP\n  ▫️ Contains 2% Salicylic Acid for pore cleansing\n  ▫️ Zinc PCA reduces bacteria\n  ▫️ Aloe Vera soothes inflammation\n\n• Vitamin C Antioxidant Serum (Code 004) - 350 EGP\n  ▫️ Brightens dark spots from acne marks\n  ▫️ Fights harmful bacteria\n\n🔄 Perfect Routine:\nMorning: Cleanser → Serum → Light moisturizer → Sunscreen\nEvening: Cleanser → Spot treatment → Soothing moisturizer\n\n⚠️ Important Tips:\n• Never squeeze pimples\n• Change pillowcase daily\n• Avoid touching face\n• Results show after 4-6 weeks\n\nWant to know more about a specific product?`
+        },
+        dryness: {
+          products: ['002', '005'],
+          arMessage: `أشوف إن بشرتك جافة! 💧 مش مشكلة، إيفا عندها الحل:\n\n🧴 المنتجات المناسبة:\n• مرطب إيفا المائي للبشرة الجافة (كود 002) - 220ج\n  ▫️ حمض الهيالورونيك يحتفظ بالرطوبة 48 ساعة\n  ▫️ نياسيناميد 5% يقوي حاجز البشرة\n  ▫️ السيراميدز تمنع فقدان الماء\n\n• مقشر إيفا اللطيف للبشرة الحساسة (كود 005) - 180ج\n  ▫️ أحماض فواكه طبيعية تزيل الجلد الميت\n  ▫️ الشوفان والعسل يرطبان بعمق\n\n🔄 الروتين المثالي:\nصباحاً: غسول لطيف → سيرم مرطب → مرطب غني → واقي شمس\nمساءً: زيت منظف → سيرم → كريم ليلي مكثف\nأسبوعياً: مقشر لطيف مرة واحدة\n\n⚠️ نصائح ذهبية:\n• تجنب الماء الساخن\n• استخدم مرطب على البشرة الرطبة\n• اشرب 2 لتر ماء يومياً\n• استخدم مرطب الجو في الشتا\n\nعايز تعرف أكتر؟`,
+          enMessage: `I see your skin is dry! 💧 No problem, Eva has the solution:\n\n🧴 Recommended Products:\n• Eva Hydrating Moisturizer for Dry Skin (Code 002) - 220 EGP\n  ▫️ Hyaluronic Acid retains moisture for 48 hours\n  ▫️ 5% Niacinamide strengthens skin barrier\n  ▫️ Ceramides prevent water loss\n\n• Eva Gentle Exfoliating Scrub (Code 005) - 180 EGP\n  ▫️ Natural fruit acids remove dead skin\n  ▫️ Oats and honey deeply moisturize\n\n🔄 Perfect Routine:\nMorning: Gentle cleanser → Hydrating serum → Rich moisturizer → Sunscreen\nEvening: Oil cleanser → Serum → Intensive night cream\nWeekly: Gentle scrub once\n\n⚠️ Golden Tips:\n• Avoid hot water\n• Apply moisturizer on damp skin\n• Drink 2L water daily\n• Use humidifier in winter\n\nWant to know more?`
+        },
+        oily: {
+          products: ['001', '003'],
+          arMessage: `بشرتك دهنية؟ 🌟 ده مش عيب، ده نعمة لو عرفتِ تتعاملي معاها صح:\n\n🧴 المنتجات المناسبة:\n• غسول إيفا اللطيف للبشرة الدهنية (كود 001) - 150ج\n  ▫️ ينظف الزيوت الزائدة بدون جفاف\n  ▫️ حمض الساليسيليك ينظف المسام بعمق\n\n• واقي الشمس إيفا SPF 50+ (كود 003) - 280ج\n  ▫️ تركيبة خفيفة غير دهنية\n  ▫️ مقاوم للماء والعرق\n  ▫️ لا يسد المسام\n\n🔄 الروتين المثالي:\nصباحاً: غسول → تونر قابض → مرطب خفيف → واقي شمس\nمساءً: غسول عميق → تونر → سيرم نياسيناميد → مرطب ليلي\n\n💡 حقائق مهمة:\n• البشرة الدهنية تتقدم في السن أبطأ\n• الترطيب ضروري حتى للبشرة الدهنية\n• تجنب الإفراط في التنظيف\n• اشرب الماء وقلل السكريات\n\nعايز نصايح أكتر؟`,
+          enMessage: `Oily skin? 🌟 That's not a flaw, it's a blessing if you handle it right:\n\n🧴 Recommended Products:\n• Eva Gentle Cleanser for Oily Skin (Code 001) - 150 EGP\n  ▫️ Removes excess oil without drying\n  ▫️ Salicylic acid deep cleans pores\n\n• Eva Sunscreen SPF 50+ (Code 003) - 280 EGP\n  ▫️ Lightweight non-greasy formula\n  ▫️ Water and sweat resistant\n  ▫️ Non-comedogenic\n\n🔄 Perfect Routine:\nMorning: Cleanser → Astringent toner → Light moisturizer → Sunscreen\nEvening: Deep cleanser → Toner → Niacinamide serum → Night moisturizer\n\n💡 Important Facts:\n• Oily skin ages slower\n• Moisturizing is essential even for oily skin\n• Avoid over-cleansing\n• Drink water and reduce sugars\n\nWant more tips?`
+        }
+      };
+
+      const recommendation = recommendations[detectedProblem as keyof typeof recommendations];
+      if (recommendation) {
+        return userLanguage === 'ar' ? recommendation.arMessage : recommendation.enMessage;
+      }
+    }
+
+    // Enhanced greetings with smart detection
     if (lowerQuery.includes('hello') || lowerQuery.includes('hi') || lowerQuery.includes('أهلا') ||
         lowerQuery.includes('مرحبا') || lowerQuery.includes('السلام') || lowerQuery.includes('صباح') ||
         lowerQuery.includes('مساء') || lowerQuery.includes('إزيك') || lowerQuery.includes('ازيك') ||
-        lowerQuery.includes('ازاي') || lowerQuery.includes('عامل') || lowerQuery.includes('اخبارك') ||
-        lowerQuery.includes('أزيك') || lowerQuery.includes('ايه أخبارك') || lowerQuery.includes('إيه أخبارك') ||
-        lowerQuery.includes('good morning') || lowerQuery.includes('good evening') || lowerQuery.includes('hey') ||
-        lowerQuery.includes('what\'s up') || lowerQuery.includes('whats up')) {
+        lowerQuery.includes('ازاي') || lowerQuery.includes('عامل') || lowerQuery.includes('اخبارك')) {
       return userLanguage === 'ar'
-        ? `أهلاً وسهلاً! ${names[Math.floor(Math.random() * names.length)]} 🌟 أنا مساعد إيفا الذكي، هنا علشان أساعدك في كل اللي تحتاجه!\n\n🚀 أقدر أساعدك في:\n• معرفة خدماتنا ومنتجاتنا الكاملة\n• معلومات عن الأسعار والعروض الحالية\n• تفاصيل المشاريع والتدريبات المتاحة\n• التواصل مع الفريق والدعم الفني\n• نصائح للعناية والجمال\n• معلومات عن جودة وشهادات إيفا\n\n💬 ممكن تسألني عن أي حاجة تخص إيفا أو أي استفسار تقني عام! إزاي أقدر أساعدك النهاردة؟ 😊`
-        : `Hello there! ${englishNames[Math.floor(Math.random() * englishNames.length)]} 🌟 I'm Eva's intelligent assistant, here to help you with everything you need!\n\n🚀 I can assist you with:\n• Complete information about our services and products\n• Current pricing and promotional offers\n• Available projects and training details\n• Team contact and technical support\n• Beauty and care tips\n• Information about Eva's quality and certifications\n\n💬 Feel free to ask me anything about Eva or any general technical questions! How can I help you today? 😊`;
-    }
-    
-    // Company information - expanded
-    if (lowerQuery.includes('company') || lowerQuery.includes('شركة') || lowerQuery.includes('إيفا') || 
-        lowerQuery.includes('eva') || lowerQuery.includes('about') || lowerQuery.includes('عن') ||
-        lowerQuery.includes('تأسست') || lowerQuery.includes('founded') || lowerQuery.includes('history')) {
-      return userLanguage === 'ar' 
-        ? `🏢 شركة إيفا - قصة نجاح تقنية مميزة!\n\n📅 تأسست: ${data.company.established}\n📍 المقر الرئيسي: ${data.company.headquarters}\n🏢 الفروع: ${data.company.branches.join(' • ')}\n👥 فريق العمل: ${data.company.employees}\n💰 الإيرادات: ${data.company.revenue}\n📈 النمو: ${data.company.growth}\n\n🏆 الجوائز:\n${data.company.awards.map(award => `• ${award}`).join('\n')}\n\n📜 الشهادات:\n${data.company.certifications.join(' • ')}\n\n✨ رسالتنا: ${data.company.mission}\n🎯 رؤيتنا: ${data.company.vision}\n\n💡 قيمنا الأساسية:\n${data.company.values.map(value => `• ${value}`).join('\n')}\n\nإحنا مش مجرد شركة تكنولوجيا، إحنا شركاء نجاحك في العصر الرقمي! 🚀`
-        : `🏢 Eva Company - A Distinguished Tech Success Story!\n\n📅 Established: ${data.company.established}\n📍 Headquarters: ${data.company.headquartersEn}\n🏢 Branches: ${data.company.branchesEn.join(' • ')}\n👥 Team: ${data.company.employees}\n💰 Revenue: ${data.company.revenueEn}\n📈 Growth: ${data.company.growthEn}\n\n🏆 Awards:\n${data.company.awardsEn.map(award => `• ${award}`).join('\n')}\n\n📜 Certifications:\n${data.company.certifications.join(' • ')}\n\n✨ Our mission: ${data.company.missionEn}\n🎯 Our vision: ${data.company.visionEn}\n\n💡 Core values:\n${data.company.valuesEn.map(value => `• ${value}`).join('\n')}\n\nWe're not just a tech company, we're your success partners in the digital age! 🚀`;
+        ? `أهلاً وسهلاً! 🌟 أنا مساعد إيفا الذكي للجمال والعناية\n\nإزاي أقدر أساعدك النهاردة؟\n• عندك مشكلة في البشرة؟ 🤔\n• محتاج توصيات منتجات؟ 💄\n• عايز روتين عناية مخصوص؟ ✨\n• سؤال عن منتج معين؟ 🧴\n\nاكتب مشكلتك وأنا هاديك الحل المناسب! 😊`
+        : `Hello and welcome! 🌟 I'm Eva's intelligent beauty and care assistant\n\nHow can I help you today?\n• Have a skin concern? 🤔\n• Need product recommendations? 💄\n• Want a custom care routine? ✨\n• Question about a specific product? 🧴\n\nDescribe your concern and I'll give you the right solution! 😊`;
     }
 
-    // Services - comprehensive
-    if (lowerQuery.includes('service') || lowerQuery.includes('خدمة') || lowerQuery.includes('خدمات') || 
-        lowerQuery.includes('development') || lowerQuery.includes('تطوير') || lowerQuery.includes('solutions') ||
-        lowerQuery.includes('حلول') || lowerQuery.includes('products') || lowerQuery.includes('منتجات')) {
-      const services = Object.values(data.services);
-      const servicesList = services.map((service, index) => 
-        userLanguage === 'ar' 
-          ? `${index + 1}. 💼 ${service.name}:\n   📝 ${service.description}${'pricing' in service ? `\n   💰 السعر: ${service.pricing}` : ''}`
-          : `${index + 1}. 💼 ${service.nameEn}:\n   📝 ${service.descriptionEn}${'pricingEn' in service ? `\n   💰 Price: ${service.pricingEn}` : ''}`
-      ).join('\n\n');
-      
-      return userLanguage === 'ar'
-        ? `🚀 خدماتنا المتميزة والشاملة:\n\n${servicesList}\n\n📊 إحصائياتنا المشرّفة:\n• ${data.statistics.projectsCompleted}\n• ${data.statistics.successRate}\n• ${data.statistics.clientSatisfaction}\n• وقت الاستجابة: ${data.statistics.responseTime}\n\n🎯 عايز تعرف تفاصيل أكتر عن خدمة معينة؟ اسألني براحتك! أو لو محتاج استشارة مجانية، أنا هنا! 💪`
-        : `🚀 Our Distinguished and Comprehensive Services:\n\n${servicesList}\n\n📊 Our Outstanding Statistics:\n• ${data.statistics.projectsCompletedEn}\n• ${data.statistics.successRateEn}\n• ${data.statistics.clientSatisfactionEn}\n• Response time: ${data.statistics.responseTimeEn}\n\n🎯 Want to know more details about a specific service? Just ask! Or if you need a free consultation, I'm here! 💪`;
-    }
-
-    // Projects and case studies
-    if (lowerQuery.includes('project') || lowerQuery.includes('مشروع') || lowerQuery.includes('مشاريع') ||
-        lowerQuery.includes('portfolio') || lowerQuery.includes('case') || lowerQuery.includes('دراسة حالة') ||
-        lowerQuery.includes('examples') || lowerQuery.includes('أمثلة')) {
-      const projects = Object.values(data.projects);
-      const projectsList = projects.map((project, index) =>
-        userLanguage === 'ar'
-          ? `${index + 1}. 🎯 ${project.name}:\n   📋 ${project.description}\n   ⏰ المدة: ${project.timeline}\n   🛠️ التقنيات: ${project.technologies.join(', ')}\n   ✨ الميزات: ${project.features.join(' • ')}`
-          : `${index + 1}. 🎯 ${project.nameEn}:\n   📋 ${project.descriptionEn}\n   ⏰ Timeline: ${project.timelineEn}\n   🛠️ Technologies: ${project.technologies.join(', ')}\n   ✨ Features: ${project.features.join(' • ')}`
-      ).join('\n\n');
-      
-      return userLanguage === 'ar'
-        ? `💼 مشاريعنا الناجحة والمميزة:\n\n${projectsList}\n\n📈 ${data.statistics.projectsCompleted} مع ${data.statistics.successRate}\n\nكل مشروع بنعمله بحب واهتمام عشان نضمن نجاحك! 🌟 عايز تشوف مشاريع أكتر؟ أو عايز نبدأ مشروعك؟`
-        : `💼 Our Successful and Distinguished Projects:\n\n${projectsList}\n\n📈 ${data.statistics.projectsCompletedEn} with ${data.statistics.successRateEn}\n\nEvery project we create with love and attention to ensure your success! 🌟 Want to see more projects? Or want to start your project?`;
-    }
-
-    // Training and courses
-    if (lowerQuery.includes('training') || lowerQuery.includes('تدريب') || lowerQuery.includes('course') ||
-        lowerQuery.includes('دورة') || lowerQuery.includes('دورات') || lowerQuery.includes('learning') ||
-        lowerQuery.includes('تعلم') || lowerQuery.includes('education') || lowerQuery.includes('تعليم')) {
-      const courses = data.training.courses;
-      const coursesList = courses.map((course, index) =>
-        userLanguage === 'ar'
-          ? `${index + 1}. 📚 ${course.name}:\n   ⏰ المدة: ${course.duration}\n   💰 السعر: ${course.price}\n   📊 المستوى: ${course.level}`
-          : `${index + 1}. 📚 ${course.nameEn}:\n   ⏰ Duration: ${course.durationEn}\n   💰 Price: ${course.priceEn}\n   📊 Level: ${course.levelEn}`
-      ).join('\n\n');
-      
-      return userLanguage === 'ar'
-        ? `🎓 دوراتنا التدريبية المتخصصة:\n\n${coursesList}\n\n🏆 الشهادات المتاحة:\n${data.training.certifications.map(cert => `• ${cert}`).join('\n')}\n\n💼 مع إيفا، التعلم مش مجرد معلومات، ده استثمار في مستقبلك المهني! عايز تعرف أكتر عن دورة معينة؟`
-        : `🎓 Our Specialized Training Courses:\n\n${coursesList}\n\n🏆 Available Certifications:\n${data.training.certificationsEn.map(cert => `• ${cert}`).join('\n')}\n\n💼 With Eva, learning isn't just information, it's an investment in your professional future! Want to know more about a specific course?`;
-    }
-
-    // Contact information - enhanced
-    if (lowerQuery.includes('contact') || lowerQuery.includes('تواصل') || lowerQuery.includes('رقم') || 
-        lowerQuery.includes('ايميل') || lowerQuery.includes('email') || lowerQuery.includes('phone') ||
-        lowerQuery.includes('address') || lowerQuery.includes('عنوان') || lowerQuery.includes('location') ||
-        lowerQuery.includes('موقع') || lowerQuery.includes('اتصال') || lowerQuery.includes('call')) {
-      return userLanguage === 'ar'
-        ? `📞 معلومات التواصل الكاملة:\n\n🏢 المقر الرئيسي:\n📍 ${data.contact.address}\n\n📱 أرقام التواصل:\n• الهاتف الرئيسي: ${data.contact.phone}\n\n📧 البريد الإلكتروني:\n• الإيميل العام: ${data.contact.email}\n• الدعم الفني: ${data.contact.supportEmail}\n• المبيعات: ${data.contact.salesEmail}\n\n🌐 الموقع الإلكتروني: ${data.contact.website}\n\n🕒 ساعات العمل: ${data.contact.workingHours}\n\n🏢 فروعنا الأخرى:\n${data.company.branches.map(branch => `• ${branch}`).join('\n')}\n\n💬 إحنا دايماً مستعدين نساعدك! اتصل بينا في أي وقت! 🤝`
-        : `📞 Complete Contact Information:\n\n🏢 Headquarters:\n📍 ${data.contact.addressEn}\n\n📱 Contact Numbers:\n• Main Phone: ${data.contact.phone}\n\n📧 Email Addresses:\n• General Email: ${data.contact.email}\n• Technical Support: ${data.contact.supportEmail}\n• Sales: ${data.contact.salesEmail}\n\n🌐 Website: ${data.contact.website}\n\n🕒 Working Hours: ${data.contact.workingHoursEn}\n\n🏢 Other Branches:\n${data.company.branchesEn.map(branch => `• ${branch}`).join('\n')}\n\n💬 We're always ready to help! Contact us anytime! 🤝`;
-    }
-
-    // Pricing - comprehensive
-    if (lowerQuery.includes('price') || lowerQuery.includes('cost') || lowerQuery.includes('سعر') || 
-        lowerQuery.includes('تكلفة') || lowerQuery.includes('فلوس') || lowerQuery.includes('budget') ||
-        lowerQuery.includes('quote') || lowerQuery.includes('عرض سعر') || lowerQuery.includes('ميزانية')) {
-      return userLanguage === 'ar'
-        ? `💰 أسعارنا التنافسية والمرنة:\n\n🏗️ الخدمات الأساسية:\n• صالون إيفا للتجميل: ${data.services.beautySalon.pricing}\n• استشارة أونلاين: مجانية\n\n📚 منتجات العناية:\n• غسول الوجه: 150 جنيه\n• مرطب البشرة: 220 جنيه\n• واقي الشمس: 280 جنيه\n\n⭐ العوامل المؤثرة على السعر:\n• نوع البشرة ومشاكلها\n• عدد المنتجات المطلوبة\n• التركيبات الطبيعية والطبية\n• الجودة والشهادات\n\n🎯 مميزات خاصة:\n• استشارة مجانية أولى\n• ضمان الجودة الطبية\n• دعم من خبراء الجمال\n• منتجات آمنة للحامل\n\n💼 عايز توصيات مخصوصة؟ احكيلي عن نوع بشرتك ومشاكلها وهاقترحلك المنتجات المناسبة! 🤝`
-        : `💰 Our Competitive and Flexible Pricing:\n\n🏗️ Core Services:\n• Eva Beauty Salon: ${data.services.beautySalon.pricingEn}\n• Online Consultation: Free\n\n📚 Skincare Products:\n• Facial Cleanser: 150 EGP\n• Moisturizer: 220 EGP\n• Sunscreen: 280 EGP\n\n⭐ Factors Affecting Price:\n• Skin type and concerns\n• Number of products needed\n• Natural and medical formulations\n• Quality and certifications\n\n🎯 Special Benefits:\n• Free initial consultation\n• Medical quality guarantee\n• Beauty expert support\n• Pregnancy-safe products\n\n💼 Want custom recommendations? Tell me about your skin type and concerns and I'll suggest the right products! 🤝`;
-    }
-
-    // Team and careers
-    if (lowerQuery.includes('team') || lowerQuery.includes('فريق') || lowerQuery.includes('موظف') || 
-        lowerQuery.includes('staff') || lowerQuery.includes('employees') || lowerQuery.includes('career') ||
-        lowerQuery.includes('وظيفة') || lowerQuery.includes('وظائف') || lowerQuery.includes('job') ||
-        lowerQuery.includes('work') || lowerQuery.includes('شغل') || lowerQuery.includes('hiring')) {
-      const positions = data.careers.openPositions;
-      const positionsList = positions.map((pos, index) =>
-        userLanguage === 'ar'
-          ? `${index + 1}. 💼 ${pos.title}\n   📍 المكان: ${pos.location}\n   ⏰ النوع: ${pos.type}\n   📊 الخبرة: ${pos.experience}`
-          : `${index + 1}. 💼 ${pos.titleEn}\n   📍 Location: ${pos.locationEn}\n   ⏰ Type: ${pos.typeEn}\n   📊 Experience: ${pos.experienceEn}`
-      ).join('\n\n');
-      
-      return userLanguage === 'ar'
-        ? `👥 فريق العمل المتميز وفرص العمل:\n\n🌟 فريقنا الحالي:\n👨‍💻 ${data.team.departments.development}\n🎨 ${data.team.departments.design}\n📈 ${data.team.departments.marketing}\n🛠️ ${data.team.departments.support}\n\n👔 القيادة:\n${data.team.leadership.map(leader => `• ${leader.name} - ${leader.position} (${leader.experience})`).join('\n')}\n\n💼 وظائف متاحة حالياً:\n\n${positionsList}\n\n🎁 مزايا العمل معنا:\n${data.careers.benefits.map(benefit => `• ${benefit}`).join('\n')}\n\n🚀 إحنا دايماً بندور على المواهب المميزة! عايز تنضملنا؟ ابعتلنا CV على ${data.contact.email}`
-        : `👥 Our Exceptional Team and Job Opportunities:\n\n🌟 Our Current Team:\n👨‍💻 ${data.team.departments.developmentEn}\n🎨 ${data.team.departments.designEn}\n📈 ${data.team.departments.marketingEn}\n🛠️ ${data.team.departments.supportEn}\n\n👔 Leadership:\n${data.team.leadership.map(leader => `• ${leader.nameEn} - ${leader.positionEn} (${leader.experienceEn})`).join('\n')}\n\n💼 Currently Available Positions:\n\n${positionsList}\n\n🎁 Benefits of Working With Us:\n${data.careers.benefitsEn.map(benefit => `• ${benefit}`).join('\n')}\n\n🚀 We're always looking for exceptional talents! Want to join us? Send your CV to ${data.contact.email}`;
-    }
-
-    // Technologies - expanded
-    if (lowerQuery.includes('technology') || lowerQuery.includes('tech') || lowerQuery.includes('تكنولوجيا') || 
-        lowerQuery.includes('تقنية') || lowerQuery.includes('برمجة') || lowerQuery.includes('programming') ||
-        lowerQuery.includes('tools') || lowerQuery.includes('أدوات') || lowerQuery.includes('stack') ||
-        lowerQuery.includes('framework') || lowerQuery.includes('library')) {
-      return userLanguage === 'ar'
-        ? `💻 تقنياتنا المتقدمة وأدواتنا الاحترافية:\n\n🎨 تطوير الواجهات الأمامية:\n${data.technologies.frontend.map(tech => `• ${tech}`).join('\n')}\n\n⚙️ تطوير الخوادم والبنية التحتية:\n${data.technologies.backend.map(tech => `• ${tech}`).join('\n')}\n\n📱 تطوير تطبيقات الموبايل:\n${data.technologies.mobile.map(tech => `• ${tech}`).join('\n')}\n\n🗄️ إدارة قواعد البيانات:\n${data.technologies.database.map(tech => `• ${tech}`).join('\n')}\n\n☁️ الحوسبة السحابية والاستضافة:\n${data.technologies.cloud.map(tech => `• ${tech}`).join('\n')}\n\n🧠 الذكاء الاصطناعي والتعلم الآلي:\n${data.technologies.ai.map(tech => `• ${tech}`).join('\n')}\n\n🔒 الأمان والامتثال:\n${data.security.standards.map(std => `• ${std}`).join('\n')}\n\n✨ إحنا مش بنجري وراء الموضة، إحنا بنختار التقنيات اللي تحقق أفضل النتائج لمشروعك! 🎯`
-        : `💻 Our Advanced Technologies and Professional Tools:\n\n🎨 Frontend Development:\n${data.technologies.frontend.map(tech => `• ${tech}`).join('\n')}\n\n⚙️ Backend Development and Infrastructure:\n${data.technologies.backend.map(tech => `• ${tech}`).join('\n')}\n\n📱 Mobile App Development:\n${data.technologies.mobile.map(tech => `• ${tech}`).join('\n')}\n\n🗄️ Database Management:\n${data.technologies.database.map(tech => `• ${tech}`).join('\n')}\n\n☁️ Cloud Computing and Hosting:\n${data.technologies.cloud.map(tech => `• ${tech}`).join('\n')}\n\n🧠 Artificial Intelligence and Machine Learning:\n${data.technologies.ai.map(tech => `• ${tech}`).join('\n')}\n\n🔒 Security and Compliance:\n${data.security.standards.map(std => `• ${std}`).join('\n')}\n\n✨ We don't chase trends, we choose technologies that deliver the best results for your project! 🎯`;
-    }
-
-    // Security and compliance
-    if (lowerQuery.includes('security') || lowerQuery.includes('أمان') || lowerQuery.includes('أمن') ||
-        lowerQuery.includes('privacy') || lowerQuery.includes('خصوصية') || lowerQuery.includes('compliance') ||
-        lowerQuery.includes('امتثال') || lowerQuery.includes('certification') || lowerQuery.includes('شهادة')) {
-      return userLanguage === 'ar'
-        ? `🔒 الأمان والخصوصية - أولويتنا القصوى:\n\n🛡️ معايير الأمان:\n${data.security.standards.map(std => `• ${std}`).join('\n')}\n\n🔐 التشفير: ${data.security.encryption}\n💾 النسخ الاحتياطية: ${data.security.backups}\n👁️ المراقبة: ${data.security.monitoring}\n⏰ وقت التشغيل: ${data.statistics.uptime}\n\n📋 الشهادات والامتثال:\n${data.company.certifications.map(cert => `• ${cert}`).join('\n')}\n\n🌟 الشراكات التقنية الآمنة:\n${data.partnerships.technology.map(partner => `• ${partner}`).join('\n')}\n\n🛡️ أمان معلوماتك مش مجرد وعد، ده التزام نعيش عليه كل يوم! 💪`
-        : `🔒 Security and Privacy - Our Top Priority:\n\n🛡️ Security Standards:\n${data.security.standards.map(std => `• ${std}`).join('\n')}\n\n🔐 Encryption: ${data.security.encryptionEn}\n💾 Backups: ${data.security.backupsEn}\n👁️ Monitoring: ${data.security.monitoringEn}\n⏰ Uptime: ${data.statistics.uptimeEn}\n\n📋 Certifications and Compliance:\n${data.company.certifications.map(cert => `• ${cert}`).join('\n')}\n\n🌟 Secure Technology Partnerships:\n${data.partnerships.technology.map(partner => `• ${partner}`).join('\n')}\n\n🛡️ Your data security isn't just a promise, it's a commitment we live by every day! 💪`;
-    }
-
-    // If no specific match found, return a smart general response instead of null
-    return userLanguage === 'ar'
-      ? `🤔 سؤال مثير للاهتمام! رغم إن مش لقيت إجابة مباشرة في بياناتي، لكن خليني أساعدك:\n\n🚀 إيفا شركة تكنولوجيا شاملة متخصصة في:\n• تطوير التطبيقات والمواقع\n• الذكاء الاصطناعي والتحول الرقمي\n• التدريب والاستشارات التقنية\n• الحلول السحابية والأمان الرقمي\n\n💡 لو سؤالك عن موضوع تقني أو تجاري، أقدر أساعدك بمعلومات عامة مفيدة.\n\nممكن توضحلي أكتر عن اللي محتاجه؟ أو اسأل عن خدماتنا التفصيلية! 🎯`
-      : `🤔 Interesting question! While I didn't find a direct answer in my database, let me help you:\n\n🚀 Eva is a comprehensive technology company specialized in:\n• App and website development\n• AI and digital transformation\n• Technical training and consulting\n• Cloud solutions and digital security\n\n💡 If your question is about technical or business topics, I can help with useful general information.\n\nCould you clarify more about what you need? Or ask about our detailed services! 🎯`;
+    return null; // Return null if no match found, will trigger AI response
   };
 
-  // Enhanced message handling with smart mode
+  // Enhanced message sending with realistic delay
   const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
-
-    const detectedLang = detectLanguage(inputValue);
-    const tone = detectTone(inputValue, detectedLang);
-    setDetectedTone(tone);
-    setLanguage(detectedLang);
+    if (!inputValue.trim() || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      content: inputValue,
+      content: inputValue.trim(),
       isUser: true,
       timestamp: new Date(),
-      language: detectedLang,
-      tone
+      language: detectLanguage(inputValue),
+      tone: detectTone(inputValue, detectLanguage(inputValue)),
+      source: 'eva'
     };
 
     setMessages(prev => [...prev, userMessage]);
-    const currentQuery = inputValue;
     setInputValue('');
     setIsLoading(true);
 
+    // Add realistic thinking delay
+    await addDelay(800);
+
     try {
-      let response: string;
+      // Update detected language and tone
+      const detectedLang = detectLanguage(inputValue);
+      const detectedToneValue = detectTone(inputValue, detectedLang);
+      setLanguage(detectedLang);
+      setDetectedTone(detectedToneValue);
+
+      // First try Eva's knowledge base
+      let botResponse = searchEvaData(inputValue.trim(), detectedLang);
       let source: 'eva' | 'groq' = 'eva';
 
-      switch (conversationMode) {
-        case 'eva-only':
-          response = searchEvaData(currentQuery, detectedLang) || 
-            (detectedLang === 'ar' 
-              ? 'عذراً، لا أملك معلومات عن هذا الموضوع في قاعدة بيانات إيفا. جرب تسأل عن خدماتنا أو معلومات الشركة!'
-              : 'Sorry, I don\'t have information about this topic in Eva\'s database. Try asking about our services or company information!');
-          break;
+      // If no direct match, use AI for intelligent response
+      if (!botResponse) {
+        await addDelay(1200); // Extra delay for AI thinking
+        try {
+          const aiResponse = await groqService.generateResponse(
+            inputValue.trim(),
+            detectedLang,
+            detectedToneValue,
+            'Eva beauty assistant context'
+          );
           
-        case 'ai-only':
+          botResponse = aiResponse || (detectedLang === 'ar' 
+            ? `شكراً لسؤالك! 🤗 ده موضوع شيق، وإيفا دايماً مهتمة بتقديم أفضل الحلول. ممكن توضحلي أكتر عشان أقدر أساعدك بشكل أدق؟`
+            : `Thank you for your question! 🤗 That's an interesting topic, and Eva always aims to provide the best solutions. Could you clarify more so I can help you more accurately?`);
           source = 'groq';
-          const context = groqService.extractContext(currentQuery, EVA_COMPANY_DATA);
-          response = await groqService.generateResponse(currentQuery, detectedLang, tone, context);
-          break;
-          
-        default: // smart mode
-          response = searchEvaData(currentQuery, detectedLang);
-          // Since searchEvaData never returns null now, we have response
-          // But check if it's the generic fallback response, then enhance with Groq
-          if (response.includes('مثير للاهتمام') || response.includes('Interesting question')) {
-            source = 'groq';
-            const context = groqService.extractContext(currentQuery, EVA_COMPANY_DATA);
-            const groqResponse = await groqService.generateResponse(currentQuery, detectedLang, tone, context);
-            // Combine Eva's general info with Groq's specific answer
-            response = groqResponse;
-          }
+        } catch (error) {
+          // Fallback to smart Eva response
+          botResponse = detectedLang === 'ar'
+            ? `أهلاً بيك! 🌟 إيفا عندها خبرة كبيرة في مجال الجمال والعناية. عايز تسأل عن إيه تحديداً؟ منتجات العناية بالبشرة؟ روتين يومي؟ ولا مشكلة معينة محتاج حل ليها؟`
+            : `Welcome! 🌟 Eva has extensive experience in beauty and care. What specifically would you like to ask about? Skincare products? Daily routine? Or a specific problem you need a solution for?`;
+          source = 'eva';
+        }
       }
 
-      const botMessage: Message = {
+      // Final delay before showing response
+      await addDelay(600);
+
+      const responseMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: response,
+        content: botResponse,
         isUser: false,
         timestamp: new Date(),
         language: detectedLang,
-        tone,
+        tone: detectedToneValue,
         source
       };
 
-      setMessages(prev => [...prev, botMessage]);
+      setMessages(prev => [...prev, responseMessage]);
     } catch (error) {
-      console.error('Error in handleSendMessage:', error);
-      // Provide intelligent response even if Groq fails
-      const evaResponse = searchEvaData(currentQuery, detectedLang);
-      const smartResponses = CONVERSATION_DATABASE.smartResponses[detectedLang];
-      const randomResponse = smartResponses.general[Math.floor(Math.random() * smartResponses.general.length)];
-      
-      const fallbackResponse = detectedLang === 'ar'
-        ? evaResponse || `${randomResponse}\n\n🤖 ${CONVERSATION_DATABASE.fallbackSystem.ar.beforeAI}\n\nلكن معلومات إيفا الأساسية متوفرة دائماً:\n• خدمة العملاء: 17125\n• الإيميل: info@eva-cosmetics.com\n• المتجر: shop@eva-cosmetics.com\n\n💼 إيه اللي تحب تعرفه عن إيفا؟`
-        : evaResponse || `${randomResponse}\n\n🤖 ${CONVERSATION_DATABASE.fallbackSystem.en.beforeAI}\n\nBut Eva's essential information is always available:\n• Customer Service: 17125\n• Email: info@eva-cosmetics.com\n• Store: shop@eva-cosmetics.com\n\n💼 What would you like to know about Eva?`;
-      
-      const botMessage: Message = {
+      console.error('Error:', error);
+      const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: fallbackResponse,
+        content: language === 'ar' 
+          ? 'عذراً، حدث خطأ تقني. ممكن تحاول تاني؟ 🤖'
+          : 'Sorry, a technical error occurred. Could you try again? 🤖',
         isUser: false,
         timestamp: new Date(),
-        language: detectedLang,
-        tone,
+        language,
+        tone: detectedTone,
         source: 'eva'
       };
-
-      setMessages(prev => [...prev, botMessage]);
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
   };
+
 
   // Copy message to clipboard
   const copyMessage = (content: string) => {
