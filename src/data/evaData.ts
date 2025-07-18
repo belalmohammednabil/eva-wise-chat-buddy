@@ -31,7 +31,7 @@ export const EVA_COMPANY_DATA = {
 
     // Skincare Products (25 Products)
     skincare: {
-      001: {
+      "001": {
         id: "001",
         name: "غسول الوجه اللطيف للبشرة الدهنية والمعرضة للحبوب",
         nameEn: "EVA Gentle Facial Cleanser – Oily & Acne-Prone Skin",
@@ -55,7 +55,7 @@ export const EVA_COMPANY_DATA = {
         rating: 4.7,
         reviews: 200
       },
-      002: {
+      "002": {
         id: "002",
         name: "مرطب مائي للبشرة الجافة والحساسة",
         nameEn: "EVA Hydrating Moisturizer – Dry & Sensitive Skin",
@@ -79,7 +79,7 @@ export const EVA_COMPANY_DATA = {
         rating: 4.8,
         reviews: 180
       },
-      003: {
+      "003": {
         id: "003",
         name: "واقي الشمس SPF 50+ للبشرة العادية والمختلطة",
         nameEn: "EVA Sunscreen SPF 50+ – Normal & Combination Skin",
@@ -103,7 +103,7 @@ export const EVA_COMPANY_DATA = {
         rating: 4.9,
         reviews: 320
       },
-      004: {
+      "004": {
         id: "004",
         name: "سيرم فيتامين C المضاد للأكسدة",
         nameEn: "EVA Vitamin C Antioxidant Serum",
@@ -127,7 +127,7 @@ export const EVA_COMPANY_DATA = {
         rating: 4.6,
         reviews: 280
       },
-      005: {
+      "005": {
         id: "005",
         name: "مقشر لطيف للبشرة الحساسة",
         nameEn: "EVA Gentle Exfoliating Scrub – Sensitive Skin",
@@ -155,7 +155,7 @@ export const EVA_COMPANY_DATA = {
 
     // Haircare Products (15 Products)
     haircare: {
-      101: {
+      "101": {
         id: "101",
         name: "شامبو ألوة إيفا المرطب",
         nameEn: "EVA Aloe Vera Hydrating Shampoo",
@@ -179,7 +179,7 @@ export const EVA_COMPANY_DATA = {
         rating: 4.4,
         reviews: 350
       },
-      102: {
+      "102": {
         id: "102",
         name: "ماسك إيفا هير كلينك المكثف",
         nameEn: "EVA Hair Clinic Intensive Repair Mask",
@@ -207,7 +207,7 @@ export const EVA_COMPANY_DATA = {
 
     // Makeup Products (10 Products)
     makeup: {
-      201: {
+      "201": {
         id: "201",
         name: "BB كريم إيفا بحماية SPF 30",
         nameEn: "EVA BB Cream SPF 30 – All Skin Types",
