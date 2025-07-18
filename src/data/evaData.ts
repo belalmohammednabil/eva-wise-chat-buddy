@@ -381,8 +381,8 @@ export const EVA_COMPANY_DATA = {
     ]
   },
 
-  // Products
-  products: {
+  // Legacy Tech Products (to be removed)
+  techProducts: {
     evaAnalytics: {
       name: "إيفا أناليتكس",
       nameEn: "Eva Analytics",
